@@ -7,6 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.lazarecki.asteroids.Constants;
 import com.lazarecki.asteroids.engine.components.location.PositionComponent;
@@ -16,6 +17,15 @@ import space.earlygrey.shapedrawer.JoinType;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class ObjectRendererSystem extends IteratingSystem {
+    private Pool<Vector2> vector2Pool = new Pool<>() {
+        @Override
+        protected Vector2 newObject() {
+            return new Vector2();
+        }
+    };
+
+    private Array<Vector2> rotated = new Array<>(32);
+
     private PolygonSpriteBatch batch;
     private ShapeDrawer drawer;
     private Viewport viewport;
@@ -48,11 +58,13 @@ public class ObjectRendererSystem extends IteratingSystem {
         RotationComponent r = rotationMapper.get(entity);
         ShapeComponent s    = shapeMapper.get(entity);
 
-        Array<Vector2> rotated = new Array<>(s.path.size);
         for(Vector2 v : s.path)
-            rotated.add(new Vector2(v).rotateRad(r.rotation).add(p.position));
+            rotated.add(vector2Pool.obtain().set(v).rotateRad(r.rotation).add(p.position));
 
         drawer.setColor(0.825f, 0.825f, 1.0f, 1.0f);
         drawer.path(rotated, Constants.lineWidth, JoinType.SMOOTH, false);
+
+        vector2Pool.freeAll(rotated);
+        rotated.clear();
     }
 }

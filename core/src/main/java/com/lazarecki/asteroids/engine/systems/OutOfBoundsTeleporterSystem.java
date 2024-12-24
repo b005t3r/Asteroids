@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.lazarecki.asteroids.Constants;
+import com.lazarecki.asteroids.engine.EngineUtils;
 import com.lazarecki.asteroids.engine.components.location.PositionComponent;
 import com.lazarecki.asteroids.engine.components.location.RotationComponent;
 import com.lazarecki.asteroids.engine.components.location.ShapeComponent;
@@ -38,13 +39,7 @@ public class OutOfBoundsTeleporterSystem extends IteratingSystem {
 
 
         // bounding rect
-        tmpRect.set(p.position.x, p.position.y, 0, 0);
-
-        for(Vector2 v : s.path) {
-            tmpVec.set(v).rotateRad(r.rotation).add(p.position);
-
-            tmpRect.merge(tmpVec);
-        }
+        EngineUtils.getBoundingBox(s.path, p.position, r.rotation, tmpRect);
 
         // still in bounds?
         if(boundsRect.overlaps(tmpRect)) {
@@ -59,8 +54,6 @@ public class OutOfBoundsTeleporterSystem extends IteratingSystem {
 
             if(p.position.y < boundsRect.y || p.position.y > boundsRect.y + boundsRect.height)
                 p.position.y += 2.0f * (center.y - p.position.y);
-
-            //p.position.rotateAroundRad(center, MathUtils.PI);
 
             // mark as teleporting
             entity.add(getEngine().createComponent(TeleportingComponent.class));

@@ -1,6 +1,7 @@
 package com.lazarecki.asteroids;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -33,8 +34,9 @@ public class GameplayScreen implements Screen {
 
         gameViewport = new FitViewport(Constants.gameWidth, Constants.gameHeight);
 
-        engine = new Engine();
+        engine = new PooledEngine();
         engine.addEntity(EngineUtils.createShipEntity(engine));
+        engine.addSystem(new AsteroidSpawnerSystem());
         engine.addSystem(new MovementSystem());
         engine.addSystem(new OutOfBoundsTeleporterSystem());
         engine.addSystem(new DumpingSystem());
