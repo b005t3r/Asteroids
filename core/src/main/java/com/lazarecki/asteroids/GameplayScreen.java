@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.*;
 import com.lazarecki.asteroids.engine.EngineUtils;
 import com.lazarecki.asteroids.engine.systems.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -19,7 +18,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 public class GameplayScreen implements Screen {
     private PolygonSpriteBatch batch;
     private ShapeDrawer shapeDrawer;
-    private Viewport gameViewport;
+    private GameViewport gameViewport;
 
     private Engine engine;
 
@@ -32,7 +31,8 @@ public class GameplayScreen implements Screen {
         pixmap.drawPixel(0, 0, 0xFFFFFFFF);
         shapeDrawer = new ShapeDrawer(batch, new TextureRegion(new Texture(pixmap)));
 
-        gameViewport = new FitViewport(Constants.gameWidth, Constants.gameHeight);
+        //gameViewport = new FitViewport(Constants.gameWidth, Constants.gameHeight);
+        gameViewport = new GameViewport(Constants.gameWidth, Constants.gameHeight);
 
         engine = new PooledEngine();
         engine.addEntity(EngineUtils.createShipEntity(engine));
@@ -51,6 +51,14 @@ public class GameplayScreen implements Screen {
         if(Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
             show();
             resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F6)) {
+            gameViewport.setDebugZoom(
+                Float.isFinite(gameViewport.getDebugZoom())
+                    ? Float.NaN
+                    : 2.5f
+            );
         }
 
         ScreenUtils.clear(Color.DARK_GRAY);

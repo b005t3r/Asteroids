@@ -90,7 +90,7 @@ public final class EngineUtils {
 
         spawnTmpVec.set(Constants.gameWidth * 0.5f, Constants.gameHeight * 0.5f);
         p.position
-            .set(Constants.gameWidth * 1.5f, Constants.gameHeight * 0.5f)
+            .set(Constants.gameWidth * 1.2f, Constants.gameHeight * 0.5f)
             .rotateAroundRad(spawnTmpVec, MathUtils.random(MathUtils.PI2));
 
         spawnTmpVec.set(

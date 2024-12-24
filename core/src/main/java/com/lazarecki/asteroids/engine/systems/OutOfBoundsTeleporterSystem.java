@@ -37,7 +37,6 @@ public class OutOfBoundsTeleporterSystem extends IteratingSystem {
         PositionComponent p = positionMapper.get(entity);
         TeleportingComponent t = teleMapper.get(entity);
 
-
         // bounding rect
         EngineUtils.getBoundingBox(s.path, p.position, r.rotation, tmpRect);
 
