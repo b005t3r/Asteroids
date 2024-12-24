@@ -36,11 +36,12 @@ public class GameplayScreen implements Screen {
         engine = new Engine();
         engine.addEntity(EngineUtils.createShipEntity(engine));
         engine.addSystem(new MovementSystem());
+        engine.addSystem(new OutOfBoundsTeleporterSystem());
         engine.addSystem(new DumpingSystem());
         engine.addSystem(new MotionSystem());
         engine.addSystem(new InputSystem());
-        engine.addSystem(new GameBackgroundRendererSystem(batch, shapeDrawer, gameViewport));
-        engine.addSystem(new GameObjectRenderingSystem(batch, shapeDrawer, gameViewport));
+        engine.addSystem(new BackgroundRendererSystem(batch, shapeDrawer, gameViewport));
+        engine.addSystem(new ObjectRendererSystem(batch, shapeDrawer, gameViewport));
     }
 
     @Override

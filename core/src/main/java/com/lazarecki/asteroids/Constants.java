@@ -10,6 +10,7 @@ public final class Constants {
     public static final float lineWidth     = 0.0333f;
 
     public static final int movementSystemPriority          = 500;
+    public static final int outOfBoundsSystemPriority       = 501;
     public static final int dumpingSystemPriority           = 505;
     public static final int motionSystemPriority            = 510;
     public static final int inputSystemPriority             = 600;

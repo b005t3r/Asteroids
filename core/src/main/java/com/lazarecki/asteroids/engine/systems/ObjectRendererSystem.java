@@ -15,7 +15,7 @@ import com.lazarecki.asteroids.engine.components.location.ShapeComponent;
 import space.earlygrey.shapedrawer.JoinType;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-public class GameObjectRenderingSystem extends IteratingSystem {
+public class ObjectRendererSystem extends IteratingSystem {
     private PolygonSpriteBatch batch;
     private ShapeDrawer drawer;
     private Viewport viewport;
@@ -24,7 +24,7 @@ public class GameObjectRenderingSystem extends IteratingSystem {
     private ComponentMapper<RotationComponent> rotationMapper = ComponentMapper.getFor(RotationComponent.class);
     private ComponentMapper<ShapeComponent> shapeMapper = ComponentMapper.getFor(ShapeComponent.class);
 
-    public GameObjectRenderingSystem(PolygonSpriteBatch batch, ShapeDrawer drawer, Viewport viewport) {
+    public ObjectRendererSystem(PolygonSpriteBatch batch, ShapeDrawer drawer, Viewport viewport) {
         super(Family.all(PositionComponent.class, RotationComponent.class, ShapeComponent.class).get(), Constants.gameObjectRenderingPriority);
 
         this.batch = batch;

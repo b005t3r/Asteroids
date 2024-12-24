@@ -7,12 +7,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.lazarecki.asteroids.Constants;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-public class GameBackgroundRendererSystem extends EntitySystem {
+public class BackgroundRendererSystem extends EntitySystem {
     private PolygonSpriteBatch batch;
     private ShapeDrawer drawer;
     private Viewport viewport;
 
-    public GameBackgroundRendererSystem(PolygonSpriteBatch batch, ShapeDrawer drawer, Viewport viewport) {
+    public BackgroundRendererSystem(PolygonSpriteBatch batch, ShapeDrawer drawer, Viewport viewport) {
         super(Constants.gameBackgroundRenderingPriority);
 
         this.batch = batch;

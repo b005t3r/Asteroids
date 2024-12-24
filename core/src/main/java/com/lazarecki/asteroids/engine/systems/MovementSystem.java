@@ -14,7 +14,7 @@ import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent
 public class MovementSystem extends IteratingSystem {
     private ComponentMapper<PositionComponent> positionMapper       = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<RotationComponent> rotationMapper       = ComponentMapper.getFor(RotationComponent.class);
-    private ComponentMapper<LinearVelocityComponent> lINVelMapper   = ComponentMapper.getFor(LinearVelocityComponent.class);
+    private ComponentMapper<LinearVelocityComponent> linVelMapper   = ComponentMapper.getFor(LinearVelocityComponent.class);
     private ComponentMapper<AngularVelocityComponent> angVelMapper  = ComponentMapper.getFor(AngularVelocityComponent.class);
 
     private Vector2 tmp = new Vector2();
@@ -30,7 +30,7 @@ public class MovementSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        LinearVelocityComponent lv  = lINVelMapper.get(entity);
+        LinearVelocityComponent lv  = linVelMapper.get(entity);
         AngularVelocityComponent av = angVelMapper.get(entity);
         PositionComponent p         = positionMapper.get(entity);
         RotationComponent r         = rotationMapper.get(entity);
