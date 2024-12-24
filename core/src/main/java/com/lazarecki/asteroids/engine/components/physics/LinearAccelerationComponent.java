@@ -4,11 +4,11 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 
-public class LateralAccelerationComponent implements Component, Pool.Poolable {
-    public Vector2 acceleration = new Vector2(Float.NaN, Float.NaN);
+public class LinearAccelerationComponent implements Component, Pool.Poolable {
+    public float acceleration = Float.NaN;
 
     @Override
     public void reset() {
-        acceleration.set(Float.NaN, Float.NaN);
+        acceleration = Float.NaN;
     }
 }

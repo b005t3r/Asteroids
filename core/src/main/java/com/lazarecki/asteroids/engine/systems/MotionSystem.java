@@ -7,21 +7,26 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.lazarecki.asteroids.Constants;
+import com.lazarecki.asteroids.engine.components.location.RotationComponent;
 import com.lazarecki.asteroids.engine.components.physics.AngularAccelerationComponent;
 import com.lazarecki.asteroids.engine.components.physics.AngularVelocityComponent;
-import com.lazarecki.asteroids.engine.components.physics.LateralAccelerationComponent;
-import com.lazarecki.asteroids.engine.components.physics.LateralVelocityComponent;
+import com.lazarecki.asteroids.engine.components.physics.LinearAccelerationComponent;
+import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent;
 
 public class MotionSystem extends IteratingSystem {
-    private ComponentMapper<LateralVelocityComponent> latVelMapper      = ComponentMapper.getFor(LateralVelocityComponent.class);
+    private ComponentMapper<LinearVelocityComponent> linVelMapper = ComponentMapper.getFor(LinearVelocityComponent.class);
     private ComponentMapper<AngularVelocityComponent> angVelMapper      = ComponentMapper.getFor(AngularVelocityComponent.class);
-    private ComponentMapper<LateralAccelerationComponent> latAccMapper  = ComponentMapper.getFor(LateralAccelerationComponent.class);
+    private ComponentMapper<LinearAccelerationComponent> linAccMapper = ComponentMapper.getFor(LinearAccelerationComponent.class);
     private ComponentMapper<AngularAccelerationComponent> angAccMapper  = ComponentMapper.getFor(AngularAccelerationComponent.class);
+    private ComponentMapper<RotationComponent> rotationMapper = ComponentMapper.getFor(RotationComponent.class);
+
+    private Vector2 tmp = new Vector2();
 
     public MotionSystem() {
         super(Family.all(
-                LateralVelocityComponent.class, AngularVelocityComponent.class,
-                LateralAccelerationComponent.class, AngularAccelerationComponent.class
+                LinearVelocityComponent.class, AngularVelocityComponent.class,
+                LinearAccelerationComponent.class, AngularAccelerationComponent.class,
+                RotationComponent.class
             ).get(),
             Constants.motionSystemPriority
         );
@@ -29,12 +34,15 @@ public class MotionSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        LateralVelocityComponent lv     = latVelMapper.get(entity);
+        LinearVelocityComponent lv      = linVelMapper.get(entity);
         AngularVelocityComponent av     = angVelMapper.get(entity);
-        LateralAccelerationComponent la = latAccMapper.get(entity);
+        LinearAccelerationComponent la  = linAccMapper.get(entity);
         AngularAccelerationComponent aa = angAccMapper.get(entity);
+        RotationComponent r             = rotationMapper.get(entity);
 
-        lv.velocity.mulAdd(la.acceleration, deltaTime).clamp(Constants.minLateralVelocity, Constants.maxLateralVelocity);
+        tmp.set(Vector2.Zero).mulAdd(Vector2.X, la.acceleration * deltaTime).setAngleRad(r.rotation).rotate90(-1);
+
+        lv.velocity.add(tmp).clamp(Constants.minLinearVelocity, Constants.maxLinearVelocity);
         av.velocity += aa.acceleration * deltaTime;
         av.velocity = MathUtils.clamp(av.velocity, Constants.maxClockwiseAngularVelocity, Constants.maxCounterClockwiseAngularVelocity);
 

@@ -9,12 +9,12 @@ import com.lazarecki.asteroids.Constants;
 import com.lazarecki.asteroids.engine.components.location.PositionComponent;
 import com.lazarecki.asteroids.engine.components.location.RotationComponent;
 import com.lazarecki.asteroids.engine.components.physics.AngularVelocityComponent;
-import com.lazarecki.asteroids.engine.components.physics.LateralVelocityComponent;
+import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent;
 
 public class MovementSystem extends IteratingSystem {
     private ComponentMapper<PositionComponent> positionMapper       = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<RotationComponent> rotationMapper       = ComponentMapper.getFor(RotationComponent.class);
-    private ComponentMapper<LateralVelocityComponent> latVelMapper  = ComponentMapper.getFor(LateralVelocityComponent.class);
+    private ComponentMapper<LinearVelocityComponent> lINVelMapper   = ComponentMapper.getFor(LinearVelocityComponent.class);
     private ComponentMapper<AngularVelocityComponent> angVelMapper  = ComponentMapper.getFor(AngularVelocityComponent.class);
 
     private Vector2 tmp = new Vector2();
@@ -22,7 +22,7 @@ public class MovementSystem extends IteratingSystem {
     public MovementSystem() {
         super(Family.all(
                 PositionComponent.class, RotationComponent.class,
-                LateralVelocityComponent.class, AngularVelocityComponent.class
+                LinearVelocityComponent.class, AngularVelocityComponent.class
             ).get(),
             Constants.movementSystemPriority
         );
@@ -30,7 +30,7 @@ public class MovementSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        LateralVelocityComponent lv = latVelMapper.get(entity);
+        LinearVelocityComponent lv  = lINVelMapper.get(entity);
         AngularVelocityComponent av = angVelMapper.get(entity);
         PositionComponent p         = positionMapper.get(entity);
         RotationComponent r         = rotationMapper.get(entity);

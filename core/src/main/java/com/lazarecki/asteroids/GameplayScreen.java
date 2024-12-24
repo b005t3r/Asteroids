@@ -12,10 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.*;
 import com.lazarecki.asteroids.engine.EngineUtils;
-import com.lazarecki.asteroids.engine.systems.GameBackgroundRendererSystem;
-import com.lazarecki.asteroids.engine.systems.GameObjectRenderingSystem;
-import com.lazarecki.asteroids.engine.systems.MotionSystem;
-import com.lazarecki.asteroids.engine.systems.MovementSystem;
+import com.lazarecki.asteroids.engine.systems.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class GameplayScreen implements Screen {
@@ -39,7 +36,9 @@ public class GameplayScreen implements Screen {
         engine = new Engine();
         engine.addEntity(EngineUtils.createShipEntity(engine));
         engine.addSystem(new MovementSystem());
+        engine.addSystem(new DumpingSystem());
         engine.addSystem(new MotionSystem());
+        engine.addSystem(new InputSystem());
         engine.addSystem(new GameBackgroundRendererSystem(batch, shapeDrawer, gameViewport));
         engine.addSystem(new GameObjectRenderingSystem(batch, shapeDrawer, gameViewport));
     }
