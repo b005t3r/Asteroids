@@ -21,6 +21,7 @@ public class GameplayScreen implements Screen {
     private GameViewport gameViewport;
 
     private Engine engine;
+    private DebugOverlayRendererSystem debugRendererSystem;
 
     @Override
     public void show() {
@@ -33,6 +34,8 @@ public class GameplayScreen implements Screen {
 
         //gameViewport = new FitViewport(Constants.gameWidth, Constants.gameHeight);
         gameViewport = new GameViewport(Constants.gameWidth, Constants.gameHeight);
+
+        debugRendererSystem = new DebugOverlayRendererSystem(batch, shapeDrawer, gameViewport);
 
         engine = new PooledEngine();
         engine.addEntity(EngineUtils.createShipEntity(engine));
@@ -54,11 +57,16 @@ public class GameplayScreen implements Screen {
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
-            gameViewport.setDebugZoom(
-                Float.isFinite(gameViewport.getDebugZoom())
-                    ? Float.NaN
-                    : 1.5f
-            );
+            float debugZoom = gameViewport.getDebugZoom();
+
+            if(Float.isFinite(debugZoom)) {
+                gameViewport.setDebugZoom(Float.NaN);
+                engine.removeSystem(debugRendererSystem);
+            }
+            else {
+                gameViewport.setDebugZoom(1.5f);
+                engine.addSystem(debugRendererSystem);
+            }
         }
 
         ScreenUtils.clear(Color.DARK_GRAY);

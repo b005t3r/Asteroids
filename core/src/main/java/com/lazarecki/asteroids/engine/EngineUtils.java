@@ -105,7 +105,7 @@ public final class EngineUtils {
 
         lv.velocity
             .set(Vector2.X)
-            .scl(MathUtils.random(Constants.maxLinearVelocity * 0.05f, Constants.maxLinearVelocity * 0.4f))
+            .scl(MathUtils.random(Constants.maxLinearVelocity * 0.05f, Constants.maxLinearVelocity * 0.25f))
             .rotateRad(angle);
 
         av.velocity = MathUtils.random(

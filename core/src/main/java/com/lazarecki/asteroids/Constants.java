@@ -22,6 +22,7 @@ public final class Constants {
     public static final int inputSystemPriority             = 600;
     public static final int gameBackgroundRenderingPriority = 900;
     public static final int gameObjectRenderingPriority     = 1000;
+    public static final int debugOverlayRenderingPriority   = 2000;
 
     public static final float minLinearVelocity                         = 0.0f;
     public static final float maxLinearVelocity                         = 4.5f;
