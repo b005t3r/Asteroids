@@ -3,6 +3,7 @@ package com.lazarecki.asteroids.engine;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -140,5 +141,35 @@ public final class EngineUtils {
             r = Math.max(v.len(), r);
 
         return r;
+    }
+
+    private static final Vector2 s1p1 = new Vector2();
+    private static final Vector2 s1p2 = new Vector2();
+    private static final Vector2 s2p1 = new Vector2();
+    private static final Vector2 s2p2 = new Vector2();
+    public static boolean collides(Array<Vector2> s1, Vector2 p1, float r1, Array<Vector2> s2, Vector2 p2, float r2) {
+        if(s1.size == 0 || s2.size == 0)
+            return false;
+
+        s1p1.set(s1.get(0)).rotateRad(r1).add(p1);
+        s2p1.set(s2.get(0)).rotateRad(r2).add(p2);
+
+        if(Intersector.isPointInPolygon(s1, s2p1) || Intersector.isPointInPolygon(s2, s1p1))
+            return true;
+
+        for(int i = 0; i < s1.size; ++i) {
+            s1p1.set(s1.get(i)).rotateRad(r1).add(p1);
+            s1p2.set(s1.get((i + 1) % s1.size)).rotateRad(r1).add(p1);
+
+            for(int j = 0; j < s2.size; ++j) {
+                s2p1.set(s2.get(j)).rotateRad(r2).add(p2);
+                s2p2.set(s2.get((j + 1) % s2.size)).rotateRad(r2).add(p2);
+
+                if(Intersector.intersectSegments(s1p1, s1p2, s2p1, s2p2, null))
+                    return true;
+            }
+        }
+
+        return false;
     }
 }

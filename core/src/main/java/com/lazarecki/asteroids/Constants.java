@@ -1,6 +1,5 @@
 package com.lazarecki.asteroids;
 
-import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -12,9 +11,12 @@ public final class Constants {
     public static final float lineWidth     = 0.0333f;
 
     public static final float spawnerInterval               = 2.0f;
-    public static final int spawnThreshold                  = 6;
+    public static final int spawnThreshold                  = 1;
 
     public static final int spawnerSystemPriority           = 100;
+    public static final int collisionCleanUpSystemPriority  = 399;
+    public static final int collisionDetectorSystemPriority = 400;
+    public static final int collisionHandlerSystemPriority  = 401;
     public static final int movementSystemPriority          = 500;
     public static final int outOfBoundsSystemPriority       = 501;
     public static final int dumpingSystemPriority           = 505;
