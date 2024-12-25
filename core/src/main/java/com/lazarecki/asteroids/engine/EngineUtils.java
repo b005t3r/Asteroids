@@ -8,10 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.lazarecki.asteroids.Constants;
-import com.lazarecki.asteroids.engine.components.location.PositionComponent;
-import com.lazarecki.asteroids.engine.components.location.RotationComponent;
-import com.lazarecki.asteroids.engine.components.location.ShapeComponent;
-import com.lazarecki.asteroids.engine.components.location.TeleportingComponent;
+import com.lazarecki.asteroids.engine.components.location.*;
 import com.lazarecki.asteroids.engine.components.logic.AsteroidComponent;
 import com.lazarecki.asteroids.engine.components.logic.ShipComponent;
 import com.lazarecki.asteroids.engine.components.physics.*;
@@ -30,6 +27,9 @@ public final class EngineUtils {
 
         entity.addAndReturn(engine.createComponent(ShapeComponent.class))
             .path.addAll(Constants.shipShapeTemplate);
+
+        entity.addAndReturn(engine.createComponent(BoundingRadiusComponent.class))
+            .radius = getBoundingRadius(Constants.shipShapeTemplate);
 
         entity.addAndReturn(engine.createComponent(LinearVelocityComponent.class))
             .velocity.set(Vector2.Zero);
@@ -67,6 +67,9 @@ public final class EngineUtils {
 
         entity.addAndReturn(engine.createComponent(ShapeComponent.class))
             .path.addAll(template);
+
+        entity.addAndReturn(engine.createComponent(BoundingRadiusComponent.class))
+            .radius = getBoundingRadius(template);
 
         entity.addAndReturn(engine.createComponent(LinearVelocityComponent.class))
             .velocity.set(Vector2.Zero);
@@ -126,5 +129,16 @@ public final class EngineUtils {
         }
 
         return result;
+    }
+
+    public static float getBoundingRadius(Array<Vector2> shape) {
+        // assume shape is build around (0, 0)
+
+        float r = 0;
+
+        for(Vector2 v : shape)
+            r = Math.max(v.len(), r);
+
+        return r;
     }
 }

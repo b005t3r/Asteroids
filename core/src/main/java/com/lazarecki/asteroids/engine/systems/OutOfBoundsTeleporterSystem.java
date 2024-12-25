@@ -4,20 +4,18 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.lazarecki.asteroids.Constants;
 import com.lazarecki.asteroids.engine.EngineUtils;
-import com.lazarecki.asteroids.engine.components.location.PositionComponent;
-import com.lazarecki.asteroids.engine.components.location.RotationComponent;
-import com.lazarecki.asteroids.engine.components.location.ShapeComponent;
-import com.lazarecki.asteroids.engine.components.location.TeleportingComponent;
+import com.lazarecki.asteroids.engine.components.location.*;
 
 public class OutOfBoundsTeleporterSystem extends IteratingSystem {
     private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
-    private ComponentMapper<RotationComponent> rotationMapper = ComponentMapper.getFor(RotationComponent.class);
     private ComponentMapper<ShapeComponent> shapeMapper = ComponentMapper.getFor(ShapeComponent.class);
+    private ComponentMapper<BoundingRadiusComponent> radiusMapper = ComponentMapper.getFor(BoundingRadiusComponent.class);
     private ComponentMapper<TeleportingComponent> teleMapper = ComponentMapper.getFor(TeleportingComponent.class);
 
     private final Rectangle boundsRect    = new Rectangle(0, 0, Constants.gameWidth, Constants.gameHeight);
@@ -25,23 +23,24 @@ public class OutOfBoundsTeleporterSystem extends IteratingSystem {
 
     private Rectangle tmpRect = new Rectangle();
     private Vector2 tmpVec = new Vector2();
+    private Circle tmpCircle = new Circle();
 
     public OutOfBoundsTeleporterSystem() {
-        super(Family.all(PositionComponent.class, RotationComponent.class, ShapeComponent.class).get(), Constants.outOfBoundsSystemPriority);
+        super(Family.all(PositionComponent.class, ShapeComponent.class, BoundingRadiusComponent.class).get(), Constants.outOfBoundsSystemPriority);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        ShapeComponent s    = shapeMapper.get(entity);
-        RotationComponent r = rotationMapper.get(entity);
-        PositionComponent p = positionMapper.get(entity);
-        TeleportingComponent t = teleMapper.get(entity);
+        ShapeComponent s            = shapeMapper.get(entity);
+        PositionComponent p         = positionMapper.get(entity);
+        BoundingRadiusComponent b   = radiusMapper.get(entity);
+        TeleportingComponent t      = teleMapper.get(entity);
 
-        // bounding rect
-        EngineUtils.getBoundingBox(s.path, p.position, r.rotation, tmpRect);
+        // bounding circle
+        tmpCircle.set(p.position, b.radius);
 
         // still in bounds?
-        if(boundsRect.overlaps(tmpRect)) {
+        if(Intersector.overlaps(tmpCircle, boundsRect)) {
             if(t != null)
                 entity.remove(TeleportingComponent.class);
         }

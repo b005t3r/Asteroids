@@ -53,11 +53,11 @@ public class GameplayScreen implements Screen {
             resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.F6)) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             gameViewport.setDebugZoom(
                 Float.isFinite(gameViewport.getDebugZoom())
                     ? Float.NaN
-                    : 2.5f
+                    : 1.5f
             );
         }
 
