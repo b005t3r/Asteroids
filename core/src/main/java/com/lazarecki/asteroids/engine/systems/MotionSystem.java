@@ -1,6 +1,5 @@
 package com.lazarecki.asteroids.engine.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -35,12 +34,10 @@ public class MotionSystem extends IteratingSystem {
         AngularAccelerationComponent aa = Mappers.angularAcc.get(entity);
         RotationComponent r             = Mappers.rotation.get(entity);
 
-        tmp.set(Vector2.Zero).mulAdd(Vector2.X, la.acceleration * deltaTime).setAngleRad(r.rotation).rotate90(-1);
+        tmp.set(Vector2.Zero).mulAdd(Vector2.X, la.acceleration * deltaTime).setAngleRad(r.rotation);
 
-        lv.velocity.add(tmp).clamp(Constants.minLinearVelocity, Constants.maxLinearVelocity);
+        lv.velocity.add(tmp).clamp(0, Constants.shipMaxLinearVelocity);
         av.velocity += aa.acceleration * deltaTime;
-        av.velocity = MathUtils.clamp(av.velocity, Constants.maxClockwiseAngularVelocity, Constants.maxCounterClockwiseAngularVelocity);
-
-        // outside allowed arc
+        av.velocity = MathUtils.clamp(av.velocity, Constants.shipMaxClockwiseAngularVelocity, Constants.shipMaxCounterClockwiseAngularVelocity);
     }
 }

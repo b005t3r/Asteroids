@@ -1,4 +1,4 @@
-package com.lazarecki.asteroids.engine.systems;
+package com.lazarecki.asteroids.engine.systems.logic;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;

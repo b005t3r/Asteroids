@@ -1,6 +1,5 @@
-package com.lazarecki.asteroids.engine.systems;
+package com.lazarecki.asteroids.engine.systems.physics;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -12,15 +11,15 @@ import com.lazarecki.asteroids.engine.components.location.RotationComponent;
 import com.lazarecki.asteroids.engine.components.physics.AngularVelocityComponent;
 import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent;
 
-public class MovementSystem extends IteratingSystem {
+public class ObjectMovementSystem extends IteratingSystem {
     private Vector2 tmp = new Vector2();
 
-    public MovementSystem() {
+    public ObjectMovementSystem() {
         super(Family.all(
                 PositionComponent.class, RotationComponent.class,
                 LinearVelocityComponent.class, AngularVelocityComponent.class
             ).get(),
-            Constants.movementSystemPriority
+            Constants.objectMovementSystemPriority
         );
     }
 

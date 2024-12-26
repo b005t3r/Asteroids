@@ -1,4 +1,4 @@
-package com.lazarecki.asteroids.engine.systems;
+package com.lazarecki.asteroids.engine.systems.logic;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -8,14 +8,13 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.lazarecki.asteroids.Constants;
 import com.lazarecki.asteroids.engine.EngineUtils;
-import com.lazarecki.asteroids.engine.components.Mappers;
 import com.lazarecki.asteroids.engine.components.logic.AsteroidComponent;
 
 public class AsteroidSpawnerSystem extends IntervalSystem {
     private ImmutableArray<Entity> asteroids;
 
     public AsteroidSpawnerSystem() {
-        super(Constants.spawnerInterval, Constants.spawnerSystemPriority);
+        super(Constants.asteroidSpawnerInterval, Constants.asteroidSpawnerSystemPriority);
     }
 
     @Override
@@ -25,7 +24,7 @@ public class AsteroidSpawnerSystem extends IntervalSystem {
 
     @Override
     protected void updateInterval() {
-        if(asteroids.size() >= Constants.spawnThreshold)
+        if(asteroids.size() >= Constants.asteroidSpawnThreshold)
             return;
 
         final Engine engine = getEngine();

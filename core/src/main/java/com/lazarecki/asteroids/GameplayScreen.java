@@ -16,7 +16,15 @@ import com.lazarecki.asteroids.engine.systems.*;
 import com.lazarecki.asteroids.engine.systems.collision.AsteroidCollisionHandlerSystem;
 import com.lazarecki.asteroids.engine.systems.collision.CollisionCleanUpSystem;
 import com.lazarecki.asteroids.engine.systems.collision.CollisionDetectorSystem;
+import com.lazarecki.asteroids.engine.systems.logic.AsteroidSpawnerSystem;
+import com.lazarecki.asteroids.engine.systems.logic.BulletCooldownSystem;
+import com.lazarecki.asteroids.engine.systems.logic.BulletSpawnerSystem;
+import com.lazarecki.asteroids.engine.systems.logic.OutOfBoundsTeleporterSystem;
+import com.lazarecki.asteroids.engine.systems.physics.BulletMovementSystem;
+import com.lazarecki.asteroids.engine.systems.physics.DumpingSystem;
+import com.lazarecki.asteroids.engine.systems.physics.ObjectMovementSystem;
 import com.lazarecki.asteroids.engine.systems.rendering.BackgroundRendererSystem;
+import com.lazarecki.asteroids.engine.systems.rendering.BulletRenderingSystem;
 import com.lazarecki.asteroids.engine.systems.rendering.DebugOverlayRendererSystem;
 import com.lazarecki.asteroids.engine.systems.rendering.ObjectRendererSystem;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -46,16 +54,20 @@ public class GameplayScreen implements Screen {
         engine = new PooledEngine();
         engine.addEntity(EngineUtils.createShipEntity(engine));
         engine.addSystem(new AsteroidSpawnerSystem());
+        engine.addSystem(new BulletCooldownSystem());
+        engine.addSystem(new BulletSpawnerSystem());
         engine.addSystem(new CollisionCleanUpSystem());
         engine.addSystem(new CollisionDetectorSystem());
         engine.addSystem(new AsteroidCollisionHandlerSystem());
-        engine.addSystem(new MovementSystem());
+        engine.addSystem(new ObjectMovementSystem());
+        engine.addSystem(new BulletMovementSystem());
         engine.addSystem(new OutOfBoundsTeleporterSystem());
         engine.addSystem(new DumpingSystem());
         engine.addSystem(new MotionSystem());
         engine.addSystem(new InputSystem());
         engine.addSystem(new BackgroundRendererSystem(batch, shapeDrawer, gameViewport));
         engine.addSystem(new ObjectRendererSystem(batch, shapeDrawer, gameViewport));
+        engine.addSystem(new BulletRenderingSystem(batch, shapeDrawer, gameViewport));
     }
 
     @Override

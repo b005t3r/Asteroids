@@ -1,6 +1,5 @@
 package com.lazarecki.asteroids.engine;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Intersector;
@@ -12,6 +11,7 @@ import com.lazarecki.asteroids.Constants;
 import com.lazarecki.asteroids.engine.components.Mappers;
 import com.lazarecki.asteroids.engine.components.location.*;
 import com.lazarecki.asteroids.engine.components.logic.AsteroidComponent;
+import com.lazarecki.asteroids.engine.components.logic.BulletComponent;
 import com.lazarecki.asteroids.engine.components.logic.ShipComponent;
 import com.lazarecki.asteroids.engine.components.physics.*;
 
@@ -46,10 +46,10 @@ public final class EngineUtils {
             .acceleration = 0;
 
         entity.addAndReturn(engine.createComponent(LinearDumpingComponent.class))
-            .dumping = Constants.linearDumping;
+            .dumping = Constants.shipLinearDumping;
 
         entity.addAndReturn(engine.createComponent(AngularDumpingComponent.class))
-            .dumping = Constants.angularDumping;
+            .dumping = Constants.shipAngularDumping;
 
         return entity;
     }
@@ -103,12 +103,12 @@ public final class EngineUtils {
 
         lv.velocity
             .set(Vector2.X)
-            .scl(MathUtils.random(Constants.maxLinearVelocity * 0.05f, Constants.maxLinearVelocity * 0.25f))
+            .scl(MathUtils.random(Constants.asteroidMinLinearVelocity, Constants.asteroidMaxLinearVelocity))
             .rotateRad(angle);
 
         av.velocity = MathUtils.random(
-            Constants.maxClockwiseAngularVelocity * 0.25f,
-            Constants.maxCounterClockwiseAngularVelocity * 0.25f
+            Constants.asteroidMaxClockwiseAngularVelocity,
+            Constants.asteroidMaxCounterClockwiseAngularVelocity
         );
 
         // it's "teleported" out of bounds
@@ -200,5 +200,16 @@ public final class EngineUtils {
 
         v1.sub(p1p2v1).add(p1p2v1New);
         v2.sub(p2p1v2).add(p2p1v2New);
+    }
+
+    public static void spawnBullet(Vector2 p, float r, Engine engine) {
+        Entity bullet = engine.createEntity();
+        bullet.add(engine.createComponent(BulletComponent.class));
+        bullet.addAndReturn(engine.createComponent(PositionComponent.class))
+            .position.set(p);
+        bullet.addAndReturn(engine.createComponent(LinearVelocityComponent.class))
+            .velocity.set(Vector2.X).rotateRad(r).scl(Constants.bulletMaxLinearVelocity);
+
+        engine.addEntity(bullet);
     }
 }

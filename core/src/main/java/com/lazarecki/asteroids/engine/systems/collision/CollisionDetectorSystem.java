@@ -1,6 +1,5 @@
 package com.lazarecki.asteroids.engine.systems.collision;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;

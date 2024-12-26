@@ -58,7 +58,7 @@ public class ObjectRendererSystem extends IteratingSystem {
         for(Vector2 v : s.path)
             rotated.add(vector2Pool.obtain().set(v).rotateRad(r.rotation).add(p.position));
 
-        drawer.setColor(0.825f, 0.825f, 1.0f, 1.0f);
+        drawer.setColor(Constants.lineColor);
         drawer.path(rotated, Constants.lineWidth, JoinType.SMOOTH, false);
 
         vector2Pool.freeAll(rotated);

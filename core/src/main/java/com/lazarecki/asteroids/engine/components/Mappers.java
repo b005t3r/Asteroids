@@ -4,8 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.lazarecki.asteroids.engine.components.collision.DetectedCollisionComponent;
 import com.lazarecki.asteroids.engine.components.collision.ProcessedCollisionComponent;
 import com.lazarecki.asteroids.engine.components.location.*;
-import com.lazarecki.asteroids.engine.components.logic.AsteroidComponent;
-import com.lazarecki.asteroids.engine.components.logic.ShipComponent;
+import com.lazarecki.asteroids.engine.components.logic.*;
 import com.lazarecki.asteroids.engine.components.physics.*;
 
 public final class Mappers {
@@ -22,6 +21,9 @@ public final class Mappers {
 
     // logic
     public static final ComponentMapper<AsteroidComponent> asteroid = ComponentMapper.getFor(AsteroidComponent.class);
+    public static final ComponentMapper<BulletComponent> bullet = ComponentMapper.getFor(BulletComponent.class);
+    public static final ComponentMapper<FiringComponent> firing = ComponentMapper.getFor(FiringComponent.class);
+    public static final ComponentMapper<FiredComponent> fired = ComponentMapper.getFor(FiredComponent.class);
     public static final ComponentMapper<ShipComponent> ship = ComponentMapper.getFor(ShipComponent.class);
 
     // physics
