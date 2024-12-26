@@ -15,6 +15,7 @@ public final class Mappers {
     // location
     public static final ComponentMapper<BoundingRadiusComponent> boundingRadius = ComponentMapper.getFor(BoundingRadiusComponent.class);
     public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
+    public static final ComponentMapper<PreviousPositionComponent> prevPosition = ComponentMapper.getFor(PreviousPositionComponent.class);
     public static final ComponentMapper<RotationComponent> rotation = ComponentMapper.getFor(RotationComponent.class);
     public static final ComponentMapper<ShapeComponent> shape = ComponentMapper.getFor(ShapeComponent.class);
     public static final ComponentMapper<TeleportingComponent> teleporting = ComponentMapper.getFor(TeleportingComponent.class);

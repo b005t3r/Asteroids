@@ -12,15 +12,15 @@ import com.lazarecki.asteroids.engine.components.physics.AngularVelocityComponen
 import com.lazarecki.asteroids.engine.components.physics.LinearDumpingComponent;
 import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent;
 
-public class DumpingSystem extends IteratingSystem {
+public class ObjectDumpingSystem extends IteratingSystem {
     private Vector2 tmp = new Vector2();
 
-    public DumpingSystem() {
+    public ObjectDumpingSystem() {
         super(Family
             .all(LinearDumpingComponent.class, LinearVelocityComponent.class)
             .all(AngularDumpingComponent.class, AngularVelocityComponent.class)
             .get(),
-            Constants.dumpingPriority
+            Constants.objectDumpingPriority
         );
     }
 

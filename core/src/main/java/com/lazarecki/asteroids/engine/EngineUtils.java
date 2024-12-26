@@ -144,7 +144,7 @@ public final class EngineUtils {
     private static final Vector2 s1p2 = new Vector2();
     private static final Vector2 s2p1 = new Vector2();
     private static final Vector2 s2p2 = new Vector2();
-    public static boolean collides(Array<Vector2> s1, Vector2 p1, float r1, Array<Vector2> s2, Vector2 p2, float r2) {
+    public static boolean isShapeColliding(Array<Vector2> s1, Vector2 p1, float r1, Array<Vector2> s2, Vector2 p2, float r2) {
         if(s1.size == 0 || s2.size == 0)
             return false;
 
@@ -211,5 +211,27 @@ public final class EngineUtils {
             .velocity.set(Vector2.X).rotateRad(r).scl(Constants.bulletMaxLinearVelocity);
 
         engine.addEntity(bullet);
+    }
+
+    private static final Vector2 bulletPosition = new Vector2();
+    private static final Vector2 bulletPrevPosition = new Vector2();
+    public static boolean isBulletColliding(Vector2 position, Vector2 prevPosition,
+                                            Array<Vector2> s, Vector2 p, float r,
+                                            Vector2 result) {
+        bulletPosition.set(position).sub(p).rotateRad(-r);
+        bulletPrevPosition.set(prevPosition).sub(p).rotateRad(-r);
+
+        if (Intersector.isPointInPolygon(s, bulletPosition) || Intersector.isPointInPolygon(s, bulletPrevPosition))
+            return true;
+
+        for (int i = 0; i < s.size; ++i) {
+            Vector2 sStart = s.get(i);
+            Vector2 sEnd = s.get((i + 1) % s.size);
+
+            if(Intersector.intersectSegments(bulletPosition, bulletPrevPosition, sStart, sEnd, result))
+                return true;
+        }
+
+        return false;
     }
 }

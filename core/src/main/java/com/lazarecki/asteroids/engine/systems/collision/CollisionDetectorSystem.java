@@ -51,7 +51,7 @@ public class CollisionDetectorSystem extends IteratingSystem {
             RotationComponent or    = Mappers.rotation.get(otherEntity);
             ShapeComponent os       = Mappers.shape.get(otherEntity);
 
-            if(! EngineUtils.collides(s.path, p.position, r.rotation, os.path, op.position, or.rotation))
+            if(! EngineUtils.isShapeColliding(s.path, p.position, r.rotation, os.path, op.position, or.rotation))
                 continue;
 
             tmpCollisions.add(otherEntity);

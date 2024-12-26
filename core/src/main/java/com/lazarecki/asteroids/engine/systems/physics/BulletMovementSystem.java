@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.lazarecki.asteroids.Constants;
 import com.lazarecki.asteroids.engine.components.Mappers;
 import com.lazarecki.asteroids.engine.components.location.PositionComponent;
+import com.lazarecki.asteroids.engine.components.location.PreviousPositionComponent;
 import com.lazarecki.asteroids.engine.components.logic.BulletComponent;
 import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent;
 
@@ -22,6 +23,12 @@ public class BulletMovementSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         PositionComponent p = Mappers.position.get(entity);
         LinearVelocityComponent lv = Mappers.linearVel.get(entity);
+        PreviousPositionComponent pp = Mappers.prevPosition.get(entity);
+
+        if(pp == null)
+            pp = entity.addAndReturn(getEngine().createComponent(PreviousPositionComponent.class));
+
+        pp.position.set(p.position);
 
         p.position.mulAdd(lv.velocity, deltaTime);
     }

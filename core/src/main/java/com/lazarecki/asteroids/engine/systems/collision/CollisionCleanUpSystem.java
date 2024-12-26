@@ -36,7 +36,7 @@ public class CollisionCleanUpSystem extends IteratingSystem {
             Entity otherEntity = pc.collisions.get(i);
 
             boolean collides =
-                EngineUtils.collides(
+                EngineUtils.isShapeColliding(
                     Mappers.shape.get(entity).path,
                     Mappers.position.get(entity).position,
                     Mappers.boundingRadius.get(entity).radius,

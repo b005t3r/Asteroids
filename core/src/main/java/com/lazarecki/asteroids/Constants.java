@@ -17,13 +17,15 @@ public final class Constants {
     public static final int asteroidSpawnerPriority             = 100;
     public static final int bulletCooldownPriority              = 200;
     public static final int bulletSpawnerPriority               = 201;
+    public static final int bulletCleanUpPriority               = 202;
     public static final int collisionCleanUpPriority            = 399;
     public static final int collisionDetectorPriority           = 400;
     public static final int asteroidCollisionPriority           = 401;
     public static final int objectMovementPriority              = 500;
     public static final int bulletMovementPriority              = 501;
+    public static final int bulletCollisionHandlerPriority      = 503;
     public static final int outOfBoundsPriority                 = 502;
-    public static final int dumpingPriority                     = 505;
+    public static final int objectDumpingPriority               = 505;
     public static final int motionPriority                      = 510;
     public static final int inputPriority                       = 600;
     public static final int gameBackgroundRenderingPriority     = 900;
