@@ -22,7 +22,7 @@ public class MotionSystem extends IteratingSystem {
                 LinearAccelerationComponent.class, AngularAccelerationComponent.class,
                 RotationComponent.class
             ).get(),
-            Constants.motionSystemPriority
+            Constants.motionPriority
         );
     }
 

@@ -23,7 +23,7 @@ public class OutOfBoundsTeleporterSystem extends IteratingSystem {
     private Circle tmpCircle = new Circle();
 
     public OutOfBoundsTeleporterSystem() {
-        super(Family.all(PositionComponent.class, ShapeComponent.class, BoundingRadiusComponent.class).get(), Constants.outOfBoundsSystemPriority);
+        super(Family.all(PositionComponent.class, ShapeComponent.class, BoundingRadiusComponent.class).get(), Constants.outOfBoundsPriority);
     }
 
     @Override

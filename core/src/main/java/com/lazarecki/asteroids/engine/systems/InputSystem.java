@@ -14,7 +14,7 @@ import com.lazarecki.asteroids.engine.components.physics.LinearAccelerationCompo
 
 public class InputSystem extends IteratingSystem {
     public InputSystem() {
-        super(Family.all(ShipComponent.class, LinearAccelerationComponent.class, AngularAccelerationComponent.class).get(), Constants.inputSystemPriority);
+        super(Family.all(ShipComponent.class, LinearAccelerationComponent.class, AngularAccelerationComponent.class).get(), Constants.inputPriority);
     }
 
     @Override

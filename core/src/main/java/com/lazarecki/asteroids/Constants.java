@@ -14,22 +14,22 @@ public final class Constants {
     public static final Color lineColor     = new Color(0.825f, 0.825f, 1.0f, 1.0f);
 
     // system priorities
-    public static final int asteroidSpawnerSystemPriority               = 100;
-    public static final int bulletCooldownSystemPriority                = 200;
-    public static final int bulletSpawnerSystemPriority                 = 201;
-    public static final int collisionCleanUpSystemPriority              = 399;
-    public static final int collisionDetectorSystemPriority             = 400;
-    public static final int asteroidCollisionSystemPriority             = 401;
-    public static final int objectMovementSystemPriority                = 500;
-    public static final int bulletMovementSystemPriority                = 501;
-    public static final int outOfBoundsSystemPriority                   = 502;
-    public static final int dumpingSystemPriority                       = 505;
-    public static final int motionSystemPriority                        = 510;
-    public static final int inputSystemPriority                         = 600;
-    public static final int gameBackgroundRenderingPriority             = 900;
-    public static final int gameObjectRenderingPriority                 = 1000;
-    public static final int bulletRenderingPriority                     = 1100;
-    public static final int debugOverlayRenderingPriority               = 2000;
+    public static final int asteroidSpawnerPriority             = 100;
+    public static final int bulletCooldownPriority              = 200;
+    public static final int bulletSpawnerPriority               = 201;
+    public static final int collisionCleanUpPriority            = 399;
+    public static final int collisionDetectorPriority           = 400;
+    public static final int asteroidCollisionPriority           = 401;
+    public static final int objectMovementPriority              = 500;
+    public static final int bulletMovementPriority              = 501;
+    public static final int outOfBoundsPriority                 = 502;
+    public static final int dumpingPriority                     = 505;
+    public static final int motionPriority                      = 510;
+    public static final int inputPriority                       = 600;
+    public static final int gameBackgroundRenderingPriority     = 900;
+    public static final int gameObjectRenderingPriority         = 1000;
+    public static final int bulletRenderingPriority             = 1100;
+    public static final int debugOverlayRenderingPriority       = 2000;
 
     // ship
     public static final float shipMaxLinearVelocity                         = 4.5f;

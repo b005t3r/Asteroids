@@ -20,7 +20,7 @@ public class CollisionDetectorSystem extends IteratingSystem {
                 .all(PositionComponent.class, RotationComponent.class, ShapeComponent.class, BoundingRadiusComponent.class)
                 .exclude(TeleportingComponent.class)
                 .get(),
-            Constants.collisionDetectorSystemPriority
+            Constants.collisionDetectorPriority
         );
     }
 

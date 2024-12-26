@@ -14,7 +14,7 @@ public class BulletMovementSystem extends IteratingSystem {
         super(Family
                 .all(BulletComponent.class, PositionComponent.class, LinearVelocityComponent.class)
                 .get(),
-            Constants.bulletMovementSystemPriority
+            Constants.bulletMovementPriority
         );
     }
 

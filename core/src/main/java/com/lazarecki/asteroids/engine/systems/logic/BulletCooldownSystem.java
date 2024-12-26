@@ -9,7 +9,7 @@ import com.lazarecki.asteroids.engine.components.logic.FiredComponent;
 
 public class BulletCooldownSystem extends IteratingSystem {
     public BulletCooldownSystem() {
-        super(Family.all(FiredComponent.class).get(), Constants.bulletCooldownSystemPriority);
+        super(Family.all(FiredComponent.class).get(), Constants.bulletCooldownPriority);
     }
 
     @Override

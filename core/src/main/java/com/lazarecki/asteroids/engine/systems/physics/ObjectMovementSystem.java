@@ -19,7 +19,7 @@ public class ObjectMovementSystem extends IteratingSystem {
                 PositionComponent.class, RotationComponent.class,
                 LinearVelocityComponent.class, AngularVelocityComponent.class
             ).get(),
-            Constants.objectMovementSystemPriority
+            Constants.objectMovementPriority
         );
     }
 

@@ -1,6 +1,5 @@
 package com.lazarecki.asteroids.engine.systems.logic;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -23,7 +22,7 @@ public class BulletSpawnerSystem extends IteratingSystem {
                 .all(ShipComponent.class, FiringComponent.class, PositionComponent.class, RotationComponent.class, BoundingRadiusComponent.class)
                 .exclude(FiredComponent.class)
             .get(),
-            Constants.bulletSpawnerSystemPriority
+            Constants.bulletSpawnerPriority
         );
     }
 

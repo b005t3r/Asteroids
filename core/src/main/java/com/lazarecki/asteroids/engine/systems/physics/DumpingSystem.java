@@ -1,6 +1,5 @@
 package com.lazarecki.asteroids.engine.systems.physics;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -21,7 +20,7 @@ public class DumpingSystem extends IteratingSystem {
             .all(LinearDumpingComponent.class, LinearVelocityComponent.class)
             .all(AngularDumpingComponent.class, AngularVelocityComponent.class)
             .get(),
-            Constants.dumpingSystemPriority
+            Constants.dumpingPriority
         );
     }
 

@@ -14,7 +14,7 @@ public class AsteroidSpawnerSystem extends IntervalSystem {
     private ImmutableArray<Entity> asteroids;
 
     public AsteroidSpawnerSystem() {
-        super(Constants.asteroidSpawnerInterval, Constants.asteroidSpawnerSystemPriority);
+        super(Constants.asteroidSpawnerInterval, Constants.asteroidSpawnerPriority);
     }
 
     @Override

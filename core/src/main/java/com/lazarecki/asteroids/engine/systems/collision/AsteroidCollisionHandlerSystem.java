@@ -21,7 +21,7 @@ public class AsteroidCollisionHandlerSystem extends IteratingSystem {
                     PositionComponent.class, BoundingRadiusComponent.class,
                     LinearVelocityComponent.class)
                 .get(),
-            Constants.asteroidCollisionSystemPriority);
+            Constants.asteroidCollisionPriority);
     }
 
     @Override

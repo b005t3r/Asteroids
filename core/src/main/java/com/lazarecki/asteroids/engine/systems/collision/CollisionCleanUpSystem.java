@@ -12,15 +12,13 @@ import com.lazarecki.asteroids.engine.components.location.BoundingRadiusComponen
 import com.lazarecki.asteroids.engine.components.location.PositionComponent;
 import com.lazarecki.asteroids.engine.components.location.ShapeComponent;
 
-import java.util.Map;
-
 public class CollisionCleanUpSystem extends IteratingSystem {
     public CollisionCleanUpSystem() {
         super(Family
                 .all(DetectedCollisionComponent.class)
                 .all(ProcessedCollisionComponent.class, ShapeComponent.class, PositionComponent.class, BoundingRadiusComponent.class)
             .get(),
-            Constants.collisionCleanUpSystemPriority
+            Constants.collisionCleanUpPriority
         );
     }
 

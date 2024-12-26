@@ -25,7 +25,7 @@ public final class EngineUtils {
             .position.set(Constants.gameWidth * 0.5f, Constants.gameHeight * 0.5f);
 
         entity.addAndReturn(engine.createComponent(RotationComponent.class))
-            .rotation = 0;
+            .rotation = MathUtils.degreesToRadians * 90.0f;
 
         entity.addAndReturn(engine.createComponent(ShapeComponent.class))
             .path.addAll(Constants.shipShapeTemplate);
