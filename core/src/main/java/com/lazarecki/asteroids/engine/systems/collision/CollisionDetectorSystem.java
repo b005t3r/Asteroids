@@ -32,13 +32,13 @@ public class CollisionDetectorSystem extends IteratingSystem {
         RotationComponent r             = Mappers.rotation.get(entity);
         ShapeComponent s                = Mappers.shape.get(entity);
         BoundingRadiusComponent b       = Mappers.boundingRadius.get(entity);
-        ProcessedCollisionComponent pc  = Mappers.processedCollision.get(entity);;
+        ProcessedCollisionComponent pc  = Mappers.processedCollision.get(entity);
 
         for(Entity otherEntity : entities) {
-            if(entity == otherEntity || pc != null && pc.collisions.contains(otherEntity, true))
+            if(entity == otherEntity || (pc != null && pc.collisions.contains(otherEntity, true)))
                 continue;
 
-            DetectedCollisionComponent oc = Mappers.detectedCollision.get(otherEntity);;
+            DetectedCollisionComponent oc = Mappers.detectedCollision.get(otherEntity);
 
             if(oc != null && oc.collisions.contains(entity, true))
                 continue;

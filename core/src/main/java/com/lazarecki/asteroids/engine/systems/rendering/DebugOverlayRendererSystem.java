@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.lazarecki.asteroids.Constants;
 import com.lazarecki.asteroids.engine.components.Mappers;
 import com.lazarecki.asteroids.engine.components.collision.DetectedCollisionComponent;
+import com.lazarecki.asteroids.engine.components.collision.ProcessedCollisionComponent;
 import com.lazarecki.asteroids.engine.components.location.BoundingRadiusComponent;
 import com.lazarecki.asteroids.engine.components.location.PositionComponent;
 import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent;
@@ -49,19 +50,24 @@ public class DebugOverlayRendererSystem extends IteratingSystem {
         PositionComponent p             = Mappers.position.get(entity);
         LinearVelocityComponent lv      = Mappers.linearVel.get(entity);
         BoundingRadiusComponent b       = Mappers.boundingRadius.get(entity);
-        DetectedCollisionComponent c    = Mappers.detectedCollision.get(entity);
+        DetectedCollisionComponent dc   = Mappers.detectedCollision.get(entity);
+        ProcessedCollisionComponent pc  = Mappers.processedCollision.get(entity);
+
+        Color color = dc != null
+            ? Color.RED
+            : pc != null ? Color.ORANGE : Color.GREEN
+        ;
+
+        drawer.setColor(color);
 
         if(lv != null) {
             tmpVec.set(p.position).mulAdd(lv.velocity, 1.0f);
 
-            drawer.setColor(Color.GREEN);
             drawer.filledCircle(p.position, 0.15f);
             drawer.line(p.position, tmpVec, 0.05f);
         }
 
-        if(b != null) {
-            drawer.setColor(c != null ? Color.RED : Color.GREEN);
+        if(b != null)
             drawer.circle(p.position.x, p.position.y, b.radius, 0.05f);
-        }
     }
 }

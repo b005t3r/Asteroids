@@ -148,8 +148,8 @@ public final class EngineUtils {
         if(s1.size == 0 || s2.size == 0)
             return false;
 
-        s1p1.set(s1.get(0)).rotateRad(r1).add(p1);
-        s2p1.set(s2.get(0)).rotateRad(r2).add(p2);
+        s1p1.set(s1.get(0)).rotateRad(r1).add(p1).sub(p2);
+        s2p1.set(s2.get(0)).rotateRad(r2).add(p2).sub(p1);
 
         if(Intersector.isPointInPolygon(s1, s2p1) || Intersector.isPointInPolygon(s2, s1p1))
             return true;

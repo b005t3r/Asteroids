@@ -8,12 +8,20 @@ import com.lazarecki.asteroids.engine.EngineUtils;
 import com.lazarecki.asteroids.engine.components.Mappers;
 import com.lazarecki.asteroids.engine.components.collision.ProcessedCollisionComponent;
 import com.lazarecki.asteroids.engine.components.collision.DetectedCollisionComponent;
+import com.lazarecki.asteroids.engine.components.location.BoundingRadiusComponent;
+import com.lazarecki.asteroids.engine.components.location.PositionComponent;
+import com.lazarecki.asteroids.engine.components.location.ShapeComponent;
 
 import java.util.Map;
 
 public class CollisionCleanUpSystem extends IteratingSystem {
     public CollisionCleanUpSystem() {
-        super(Family.all(DetectedCollisionComponent.class).get(), Constants.collisionCleanUpSystemPriority);
+        super(Family
+                .all(DetectedCollisionComponent.class)
+                .all(ProcessedCollisionComponent.class, ShapeComponent.class, PositionComponent.class, BoundingRadiusComponent.class)
+            .get(),
+            Constants.collisionCleanUpSystemPriority
+        );
     }
 
     @Override
@@ -29,14 +37,15 @@ public class CollisionCleanUpSystem extends IteratingSystem {
         for(int i = pc.collisions.size - 1; i >= 0; --i) {
             Entity otherEntity = pc.collisions.get(i);
 
-            boolean collides = EngineUtils.collides(
-                Mappers.shape.get(entity).path,
-                Mappers.position.get(entity).position,
-                Mappers.boundingRadius.get(entity).radius,
-                Mappers.shape.get(otherEntity).path,
-                Mappers.position.get(otherEntity).position,
-                Mappers.boundingRadius.get(otherEntity).radius
-            );
+            boolean collides =
+                EngineUtils.collides(
+                    Mappers.shape.get(entity).path,
+                    Mappers.position.get(entity).position,
+                    Mappers.boundingRadius.get(entity).radius,
+                    Mappers.shape.get(otherEntity).path,
+                    Mappers.position.get(otherEntity).position,
+                    Mappers.boundingRadius.get(otherEntity).radius
+                );
 
             // the collision is still happening
             if(collides)
