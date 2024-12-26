@@ -7,6 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.lazarecki.asteroids.Constants;
+import com.lazarecki.asteroids.engine.components.Mappers;
 import com.lazarecki.asteroids.engine.components.location.RotationComponent;
 import com.lazarecki.asteroids.engine.components.physics.AngularAccelerationComponent;
 import com.lazarecki.asteroids.engine.components.physics.AngularVelocityComponent;
@@ -14,12 +15,6 @@ import com.lazarecki.asteroids.engine.components.physics.LinearAccelerationCompo
 import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent;
 
 public class MotionSystem extends IteratingSystem {
-    private ComponentMapper<LinearVelocityComponent> linVelMapper = ComponentMapper.getFor(LinearVelocityComponent.class);
-    private ComponentMapper<AngularVelocityComponent> angVelMapper      = ComponentMapper.getFor(AngularVelocityComponent.class);
-    private ComponentMapper<LinearAccelerationComponent> linAccMapper = ComponentMapper.getFor(LinearAccelerationComponent.class);
-    private ComponentMapper<AngularAccelerationComponent> angAccMapper  = ComponentMapper.getFor(AngularAccelerationComponent.class);
-    private ComponentMapper<RotationComponent> rotationMapper = ComponentMapper.getFor(RotationComponent.class);
-
     private Vector2 tmp = new Vector2();
 
     public MotionSystem() {
@@ -34,11 +29,11 @@ public class MotionSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        LinearVelocityComponent lv      = linVelMapper.get(entity);
-        AngularVelocityComponent av     = angVelMapper.get(entity);
-        LinearAccelerationComponent la  = linAccMapper.get(entity);
-        AngularAccelerationComponent aa = angAccMapper.get(entity);
-        RotationComponent r             = rotationMapper.get(entity);
+        LinearVelocityComponent lv      = Mappers.linearVel.get(entity);
+        AngularVelocityComponent av     = Mappers.angularVel.get(entity);
+        LinearAccelerationComponent la  = Mappers.linearAcc.get(entity);
+        AngularAccelerationComponent aa = Mappers.angularAcc.get(entity);
+        RotationComponent r             = Mappers.rotation.get(entity);
 
         tmp.set(Vector2.Zero).mulAdd(Vector2.X, la.acceleration * deltaTime).setAngleRad(r.rotation).rotate90(-1);
 

@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.lazarecki.asteroids.engine.EngineUtils;
 import com.lazarecki.asteroids.engine.systems.*;
+import com.lazarecki.asteroids.engine.systems.collision.AsteroidCollisionHandlerSystem;
 import com.lazarecki.asteroids.engine.systems.collision.CollisionCleanUpSystem;
 import com.lazarecki.asteroids.engine.systems.collision.CollisionDetectorSystem;
 import com.lazarecki.asteroids.engine.systems.rendering.BackgroundRendererSystem;
@@ -47,6 +48,7 @@ public class GameplayScreen implements Screen {
         engine.addSystem(new AsteroidSpawnerSystem());
         engine.addSystem(new CollisionCleanUpSystem());
         engine.addSystem(new CollisionDetectorSystem());
+        engine.addSystem(new AsteroidCollisionHandlerSystem());
         engine.addSystem(new MovementSystem());
         engine.addSystem(new OutOfBoundsTeleporterSystem());
         engine.addSystem(new DumpingSystem());

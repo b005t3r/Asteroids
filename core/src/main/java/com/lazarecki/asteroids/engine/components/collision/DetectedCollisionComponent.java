@@ -5,7 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
-public class CollisionComponent implements Component, Pool.Poolable {
+// collision to be processed this step
+public class DetectedCollisionComponent implements Component, Pool.Poolable {
     public Array<Entity> collisions = new Array<>(32);
 
     @Override

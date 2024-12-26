@@ -7,17 +7,13 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.lazarecki.asteroids.Constants;
+import com.lazarecki.asteroids.engine.components.Mappers;
 import com.lazarecki.asteroids.engine.components.physics.AngularDumpingComponent;
 import com.lazarecki.asteroids.engine.components.physics.AngularVelocityComponent;
 import com.lazarecki.asteroids.engine.components.physics.LinearDumpingComponent;
 import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent;
 
 public class DumpingSystem extends IteratingSystem {
-    private ComponentMapper<LinearDumpingComponent> linDumpMapper   = ComponentMapper.getFor(LinearDumpingComponent.class);
-    private ComponentMapper<AngularDumpingComponent> angDumpMapper  = ComponentMapper.getFor(AngularDumpingComponent.class);
-    private ComponentMapper<LinearVelocityComponent> linVelMapper   = ComponentMapper.getFor(LinearVelocityComponent.class);
-    private ComponentMapper<AngularVelocityComponent> angVelMapper  = ComponentMapper.getFor(AngularVelocityComponent.class);
-
     private Vector2 tmp = new Vector2();
 
     public DumpingSystem() {
@@ -31,10 +27,10 @@ public class DumpingSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        LinearDumpingComponent ld   = linDumpMapper.get(entity);
-        LinearVelocityComponent lv  = linVelMapper.get(entity);
-        AngularDumpingComponent ad  = angDumpMapper.get(entity);
-        AngularVelocityComponent av = angVelMapper.get(entity);
+        LinearDumpingComponent ld   = Mappers.linearDump.get(entity);
+        LinearVelocityComponent lv  = Mappers.linearVel.get(entity);
+        AngularDumpingComponent ad  = Mappers.angularDump.get(entity);
+        AngularVelocityComponent av = Mappers.angularVel.get(entity);
 
         if(ld != null && lv != null) {
             tmp.set(lv.velocity).rotateRad(MathUtils.PI).scl(deltaTime * ld.dumping);

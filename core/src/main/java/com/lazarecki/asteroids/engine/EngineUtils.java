@@ -172,4 +172,31 @@ public final class EngineUtils {
 
         return false;
     }
+
+    private static final Vector2 dv = new Vector2();
+
+    public static void elasticCirclesCollision(Vector2 p1, float r1, Vector2 v1, Vector2 p2, float r2, Vector2 v2) {
+        Vector2 p1p2Nor = new Vector2(p2).sub(p1).nor();
+        Vector2 p2p1Nor = new Vector2(p1).sub(p2).nor();
+
+        Vector2 p1p2v1 = new Vector2(p1p2Nor).scl(p1p2Nor.dot(v1));
+        Vector2 p2p1v2 = new Vector2(p2p1Nor).scl(p2p1Nor.dot(v2));
+
+        float m1 = MathUtils.PI * r1 * r1;
+        float m2 = MathUtils.PI * r2 * r2;
+        float tm = m1 + m2;
+
+        Vector2 p1p2v1New = new Vector2(
+            (p1p2v1.x * (m1 - m2) + (2 * m2 * p2p1v2.x)) / tm,
+            (p1p2v1.y * (m1 - m2) + (2 * m2 * p2p1v2.y)) / tm
+        );
+
+        Vector2 p2p1v2New = new Vector2(
+            (p2p1v2.x * (m2 - m1) + (2 * m1 * p1p2v1.x)) / tm,
+            (p2p1v2.y * (m2 - m1) + (2 * m1 * p1p2v1.y)) / tm
+        );
+
+        v1.sub(p1p2v1).add(p1p2v1New);
+        v2.sub(p2p1v2).add(p2p1v2New);
+    }
 }

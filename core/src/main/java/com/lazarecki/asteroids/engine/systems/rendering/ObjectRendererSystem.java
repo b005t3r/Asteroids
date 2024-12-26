@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.lazarecki.asteroids.Constants;
+import com.lazarecki.asteroids.engine.components.Mappers;
 import com.lazarecki.asteroids.engine.components.location.PositionComponent;
 import com.lazarecki.asteroids.engine.components.location.RotationComponent;
 import com.lazarecki.asteroids.engine.components.location.ShapeComponent;
@@ -29,10 +30,6 @@ public class ObjectRendererSystem extends IteratingSystem {
     private PolygonSpriteBatch batch;
     private ShapeDrawer drawer;
     private Viewport viewport;
-
-    private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
-    private ComponentMapper<RotationComponent> rotationMapper = ComponentMapper.getFor(RotationComponent.class);
-    private ComponentMapper<ShapeComponent> shapeMapper = ComponentMapper.getFor(ShapeComponent.class);
 
     public ObjectRendererSystem(PolygonSpriteBatch batch, ShapeDrawer drawer, Viewport viewport) {
         super(Family.all(PositionComponent.class, RotationComponent.class, ShapeComponent.class).get(), Constants.gameObjectRenderingPriority);
@@ -54,9 +51,9 @@ public class ObjectRendererSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        PositionComponent p = positionMapper.get(entity);
-        RotationComponent r = rotationMapper.get(entity);
-        ShapeComponent s    = shapeMapper.get(entity);
+        PositionComponent p = Mappers.position.get(entity);
+        RotationComponent r = Mappers.rotation.get(entity);
+        ShapeComponent s    = Mappers.shape.get(entity);
 
         for(Vector2 v : s.path)
             rotated.add(vector2Pool.obtain().set(v).rotateRad(r.rotation).add(p.position));

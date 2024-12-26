@@ -1,6 +1,5 @@
 package com.lazarecki.asteroids.engine.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -9,15 +8,13 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.lazarecki.asteroids.Constants;
-import com.lazarecki.asteroids.engine.EngineUtils;
-import com.lazarecki.asteroids.engine.components.location.*;
+import com.lazarecki.asteroids.engine.components.Mappers;
+import com.lazarecki.asteroids.engine.components.location.BoundingRadiusComponent;
+import com.lazarecki.asteroids.engine.components.location.PositionComponent;
+import com.lazarecki.asteroids.engine.components.location.ShapeComponent;
+import com.lazarecki.asteroids.engine.components.location.TeleportingComponent;
 
 public class OutOfBoundsTeleporterSystem extends IteratingSystem {
-    private ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
-    private ComponentMapper<ShapeComponent> shapeMapper = ComponentMapper.getFor(ShapeComponent.class);
-    private ComponentMapper<BoundingRadiusComponent> radiusMapper = ComponentMapper.getFor(BoundingRadiusComponent.class);
-    private ComponentMapper<TeleportingComponent> teleMapper = ComponentMapper.getFor(TeleportingComponent.class);
-
     private final Rectangle boundsRect    = new Rectangle(0, 0, Constants.gameWidth, Constants.gameHeight);
     private final Vector2 center          = boundsRect.getCenter(new Vector2());
 
@@ -31,10 +28,9 @@ public class OutOfBoundsTeleporterSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        ShapeComponent s            = shapeMapper.get(entity);
-        PositionComponent p         = positionMapper.get(entity);
-        BoundingRadiusComponent b   = radiusMapper.get(entity);
-        TeleportingComponent t      = teleMapper.get(entity);
+        PositionComponent p         = Mappers.position.get(entity);
+        BoundingRadiusComponent b   = Mappers.boundingRadius.get(entity);
+        TeleportingComponent t      = Mappers.teleporting.get(entity);
 
         // bounding circle
         tmpCircle.set(p.position, b.radius);

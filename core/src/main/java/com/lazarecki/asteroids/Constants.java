@@ -10,13 +10,13 @@ public final class Constants {
     public static final int gameHeight      = 15;
     public static final float lineWidth     = 0.0333f;
 
-    public static final float spawnerInterval               = 2.0f;
-    public static final int spawnThreshold                  = 1;
+    public static final float spawnerInterval               = 0.1f;
+    public static final int spawnThreshold                  = 30;
 
     public static final int spawnerSystemPriority           = 100;
     public static final int collisionCleanUpSystemPriority  = 399;
     public static final int collisionDetectorSystemPriority = 400;
-    public static final int collisionHandlerSystemPriority  = 401;
+    public static final int asteroidCollisionSystemPriority = 401;
     public static final int movementSystemPriority          = 500;
     public static final int outOfBoundsSystemPriority       = 501;
     public static final int dumpingSystemPriority           = 505;
