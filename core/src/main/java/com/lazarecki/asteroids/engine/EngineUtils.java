@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.lazarecki.asteroids.Constants;
+import com.lazarecki.asteroids.engine.components.Mappers;
 import com.lazarecki.asteroids.engine.components.location.*;
 import com.lazarecki.asteroids.engine.components.logic.AsteroidComponent;
 import com.lazarecki.asteroids.engine.components.logic.ShipComponent;
@@ -81,16 +82,12 @@ public final class EngineUtils {
         return entity;
     }
 
-    private static ComponentMapper<PositionComponent> posMapper            = ComponentMapper.getFor(PositionComponent.class);
-    private static ComponentMapper<LinearVelocityComponent> linVelMapper   = ComponentMapper.getFor(LinearVelocityComponent.class);
-    private static ComponentMapper<AngularVelocityComponent> angVelMapper  = ComponentMapper.getFor(AngularVelocityComponent.class);
-
     private static Vector2 spawnTmpVec = new Vector2();
 
     public static void spawnAsteroid(Entity asteroid, Engine engine) {
-        PositionComponent p         = posMapper.get(asteroid);
-        LinearVelocityComponent lv  = linVelMapper.get(asteroid);
-        AngularVelocityComponent av = angVelMapper.get(asteroid);
+        PositionComponent p         = Mappers.position.get(asteroid);
+        LinearVelocityComponent lv  = Mappers.linearVel.get(asteroid);
+        AngularVelocityComponent av = Mappers.angularVel.get(asteroid);
 
         spawnTmpVec.set(Constants.gameWidth * 0.5f, Constants.gameHeight * 0.5f);
         p.position
@@ -173,25 +170,30 @@ public final class EngineUtils {
         return false;
     }
 
-    private static final Vector2 dv = new Vector2();
+    private static final Vector2 p1p2Nor = new Vector2();
+    private static final Vector2 p2p1Nor = new Vector2();
+    private static final Vector2 p1p2v1 = new Vector2();
+    private static final Vector2 p2p1v2 = new Vector2();
+    private static final Vector2 p1p2v1New = new Vector2();
+    private static final Vector2 p2p1v2New = new Vector2();
 
     public static void elasticCirclesCollision(Vector2 p1, float r1, Vector2 v1, Vector2 p2, float r2, Vector2 v2) {
-        Vector2 p1p2Nor = new Vector2(p2).sub(p1).nor();
-        Vector2 p2p1Nor = new Vector2(p1).sub(p2).nor();
+        p1p2Nor.set(p2).sub(p1).nor();
+        p2p1Nor.set(p1).sub(p2).nor();
 
-        Vector2 p1p2v1 = new Vector2(p1p2Nor).scl(p1p2Nor.dot(v1));
-        Vector2 p2p1v2 = new Vector2(p2p1Nor).scl(p2p1Nor.dot(v2));
+        p1p2v1.set(p1p2Nor).scl(p1p2Nor.dot(v1));
+        p2p1v2.set(p2p1Nor).scl(p2p1Nor.dot(v2));
 
         float m1 = MathUtils.PI * r1 * r1;
         float m2 = MathUtils.PI * r2 * r2;
         float tm = m1 + m2;
 
-        Vector2 p1p2v1New = new Vector2(
+        p1p2v1New.set(
             (p1p2v1.x * (m1 - m2) + (2 * m2 * p2p1v2.x)) / tm,
             (p1p2v1.y * (m1 - m2) + (2 * m2 * p2p1v2.y)) / tm
         );
 
-        Vector2 p2p1v2New = new Vector2(
+        p2p1v2New.set(
             (p2p1v2.x * (m2 - m1) + (2 * m1 * p1p2v1.x)) / tm,
             (p2p1v2.y * (m2 - m1) + (2 * m1 * p1p2v1.y)) / tm
         );
