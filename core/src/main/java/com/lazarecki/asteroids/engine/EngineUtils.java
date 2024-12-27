@@ -59,7 +59,8 @@ public final class EngineUtils {
         Array<Vector2> template = allTemplates.get(MathUtils.random(0, allTemplates.size - 1));
 
         Entity entity = engine.createEntity();
-        entity.add(engine.createComponent(AsteroidComponent.class));
+        entity.addAndReturn(engine.createComponent(AsteroidComponent.class))
+            .asteroidType = asteroidType;
 
         entity.addAndReturn(engine.createComponent(PositionComponent.class))
             .position.set(Constants.gameWidth * 0.5f, Constants.gameHeight * 0.5f);

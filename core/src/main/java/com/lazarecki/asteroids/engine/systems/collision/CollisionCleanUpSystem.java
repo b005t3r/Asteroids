@@ -35,7 +35,10 @@ public class CollisionCleanUpSystem extends IteratingSystem {
         for(int i = pc.collisions.size - 1; i >= 0; --i) {
             Entity otherEntity = pc.collisions.get(i);
 
+            boolean isOtherEntityRemoved = ! Mappers.processedCollision.has(otherEntity);
+
             boolean collides =
+                ! isOtherEntityRemoved &&
                 EngineUtils.isShapeColliding(
                     Mappers.shape.get(entity).path,
                     Mappers.position.get(entity).position,
@@ -54,11 +57,13 @@ public class CollisionCleanUpSystem extends IteratingSystem {
             if(pc.collisions.isEmpty())
                 entity.remove(ProcessedCollisionComponent.class);
 
-            ProcessedCollisionComponent opc = Mappers.processedCollision.get(otherEntity);
-            opc.collisions.removeValue(entity, true);
+            if(! isOtherEntityRemoved) {
+                ProcessedCollisionComponent opc = Mappers.processedCollision.get(otherEntity);
+                opc.collisions.removeValue(entity, true);
 
-            if(opc.collisions.isEmpty())
-                otherEntity.remove(ProcessedCollisionComponent.class);
+                if(opc.collisions.isEmpty())
+                    otherEntity.remove(ProcessedCollisionComponent.class);
+            }
         }
     }
 }

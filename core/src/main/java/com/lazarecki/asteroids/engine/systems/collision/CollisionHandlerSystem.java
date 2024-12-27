@@ -14,10 +14,10 @@ import com.lazarecki.asteroids.engine.components.location.PositionComponent;
 import com.lazarecki.asteroids.engine.components.logic.AsteroidComponent;
 import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent;
 
-public class AsteroidCollisionHandlerSystem extends IteratingSystem {
-    public AsteroidCollisionHandlerSystem() {
+public class CollisionHandlerSystem extends IteratingSystem {
+    public CollisionHandlerSystem() {
         super(Family
-                .all(AsteroidComponent.class, DetectedCollisionComponent.class,
+                .all(DetectedCollisionComponent.class,
                     PositionComponent.class, BoundingRadiusComponent.class,
                     LinearVelocityComponent.class)
                 .get(),

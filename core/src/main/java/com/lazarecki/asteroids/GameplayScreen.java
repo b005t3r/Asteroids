@@ -49,7 +49,8 @@ public class GameplayScreen implements Screen {
         engine.addSystem(new BulletCleanUpSystem());
         engine.addSystem(new CollisionCleanUpSystem());
         engine.addSystem(new CollisionDetectorSystem());
-        engine.addSystem(new AsteroidCollisionHandlerSystem());
+        engine.addSystem(new CollisionHandlerSystem());
+        engine.addSystem(new AsteroidBulletHitHandlerSystem());
         engine.addSystem(new ObjectMovementSystem());
         engine.addSystem(new BulletMovementSystem());
         engine.addSystem(new BulletCollisionHandlerSystem());

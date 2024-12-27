@@ -21,6 +21,7 @@ public final class Constants {
     public static final int collisionCleanUpPriority            = 399;
     public static final int collisionDetectorPriority           = 400;
     public static final int asteroidCollisionPriority           = 401;
+    public static final int asteroidBulletCollisionPriority     = 402;
     public static final int objectMovementPriority              = 500;
     public static final int bulletMovementPriority              = 501;
     public static final int outOfBoundsPriority                 = 502;
@@ -59,8 +60,8 @@ public final class Constants {
     public static final float bulletCooldown                                = 0.2f;
 
     // asteroids
-    public static final float asteroidSpawnerInterval                       = 2.0f;
-    public static final int asteroidSpawnThreshold                          = 6;
+    public static final float asteroidSpawnerInterval                       = 1.0f;
+    public static final int asteroidSpawnThreshold                          = 8;
     public static final float asteroidMinLinearVelocity                     = 4.5f * 0.05f;
     public static final float asteroidMaxLinearVelocity                     = 4.5f * 0.25f;
     public static final float asteroidMaxCounterClockwiseAngularVelocity    = 180 * MathUtils.degreesToRadians * 0.25f;

@@ -29,7 +29,7 @@ public class AsteroidSpawnerSystem extends IntervalSystem {
 
         final Engine engine = getEngine();
 
-        Constants.AsteroidType at = MathUtils.random(1.0f) < 0.35f ? Constants.AsteroidType.small : Constants.AsteroidType.epic;
+        Constants.AsteroidType at = MathUtils.random(1.0f) < 0.35f ? Constants.AsteroidType.large : Constants.AsteroidType.epic;
 
         Entity entity = EngineUtils.createAsteroidEntity(at, engine);
         EngineUtils.spawnAsteroid(entity, engine);
