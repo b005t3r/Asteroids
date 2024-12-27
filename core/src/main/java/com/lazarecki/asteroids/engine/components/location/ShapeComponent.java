@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
 public class ShapeComponent implements Component, Pool.Poolable {
-    public Array<Vector2> path = new Array<>();
+    public final Array<Vector2> path = new Array<>();
 
     @Override
     public void reset() {

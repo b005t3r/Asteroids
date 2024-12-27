@@ -64,10 +64,10 @@ public class DebugOverlayRendererSystem extends IteratingSystem {
             tmpVec.set(p.position).mulAdd(lv.velocity, 1.0f);
 
             drawer.filledCircle(p.position, 0.15f);
-            drawer.line(p.position, tmpVec, 0.05f);
+            drawer.line(p.position, tmpVec, 0.02f);
         }
 
         if(b != null)
-            drawer.circle(p.position.x, p.position.y, b.radius, 0.05f);
+            drawer.circle(p.position.x, p.position.y, b.radius, 0.02f);
     }
 }

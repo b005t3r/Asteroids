@@ -217,19 +217,19 @@ public final class EngineUtils {
     private static final Vector2 bulletPrevPosition = new Vector2();
     public static boolean isBulletColliding(Vector2 position, Vector2 prevPosition,
                                             Array<Vector2> s, Vector2 p, float r,
-                                            Vector2 result) {
+                                            Vector2 locationResult, Vector2 angleResult) {
         bulletPosition.set(position).sub(p).rotateRad(-r);
         bulletPrevPosition.set(prevPosition).sub(p).rotateRad(-r);
-
-        if (Intersector.isPointInPolygon(s, bulletPosition) || Intersector.isPointInPolygon(s, bulletPrevPosition))
-            return true;
 
         for (int i = 0; i < s.size; ++i) {
             Vector2 sStart = s.get(i);
             Vector2 sEnd = s.get((i + 1) % s.size);
 
-            if(Intersector.intersectSegments(bulletPosition, bulletPrevPosition, sStart, sEnd, result))
-                return true;
+            if(! Intersector.intersectSegments(bulletPosition, bulletPrevPosition, sStart, sEnd, locationResult))
+                continue;
+
+            angleResult.set(position).sub(prevPosition).nor();
+            return true;
         }
 
         return false;

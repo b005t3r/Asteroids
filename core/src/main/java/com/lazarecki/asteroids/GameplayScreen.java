@@ -13,18 +13,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.lazarecki.asteroids.engine.EngineUtils;
 import com.lazarecki.asteroids.engine.systems.*;
-import com.lazarecki.asteroids.engine.systems.collision.AsteroidCollisionHandlerSystem;
-import com.lazarecki.asteroids.engine.systems.collision.BulletCollisionHandlerSystem;
-import com.lazarecki.asteroids.engine.systems.collision.CollisionCleanUpSystem;
-import com.lazarecki.asteroids.engine.systems.collision.CollisionDetectorSystem;
+import com.lazarecki.asteroids.engine.systems.collision.*;
 import com.lazarecki.asteroids.engine.systems.logic.*;
-import com.lazarecki.asteroids.engine.systems.physics.BulletMovementSystem;
-import com.lazarecki.asteroids.engine.systems.physics.ObjectDumpingSystem;
-import com.lazarecki.asteroids.engine.systems.physics.ObjectMovementSystem;
-import com.lazarecki.asteroids.engine.systems.rendering.BackgroundRendererSystem;
-import com.lazarecki.asteroids.engine.systems.rendering.BulletRenderingSystem;
-import com.lazarecki.asteroids.engine.systems.rendering.DebugOverlayRendererSystem;
-import com.lazarecki.asteroids.engine.systems.rendering.ObjectRendererSystem;
+import com.lazarecki.asteroids.engine.systems.physics.*;
+import com.lazarecki.asteroids.engine.systems.rendering.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class GameplayScreen implements Screen {

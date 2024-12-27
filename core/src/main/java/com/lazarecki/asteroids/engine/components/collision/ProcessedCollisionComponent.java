@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Pool;
 
 // collision already processed and to be ignored
 public class ProcessedCollisionComponent implements Component, Pool.Poolable {
-    public Array<Entity> collisions = new Array<>(32);
+    public final Array<Entity> collisions = new Array<>(32);
 
     @Override
     public void reset() {

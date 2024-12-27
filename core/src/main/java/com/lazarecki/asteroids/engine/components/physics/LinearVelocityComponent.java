@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 
 public class LinearVelocityComponent implements Component, Pool.Poolable {
-    public Vector2 velocity = new Vector2(Float.NaN, Float.NaN);
+    public final Vector2 velocity = new Vector2(Float.NaN, Float.NaN);
 
     @Override
     public void reset() {
