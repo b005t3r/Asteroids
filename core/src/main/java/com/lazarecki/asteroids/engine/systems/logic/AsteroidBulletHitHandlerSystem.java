@@ -15,8 +15,6 @@ import com.lazarecki.asteroids.engine.components.logic.BulletHitComponent;
 import com.lazarecki.asteroids.engine.components.physics.AngularVelocityComponent;
 import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent;
 
-import java.util.Map;
-
 public class AsteroidBulletHitHandlerSystem extends IteratingSystem {
     private Vector2 tmpHitAngle = new Vector2();
     private Vector2 tmp = new Vector2();

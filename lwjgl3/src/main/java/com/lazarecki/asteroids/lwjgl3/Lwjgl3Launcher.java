@@ -2,6 +2,7 @@ package com.lazarecki.asteroids.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.graphics.glutils.HdpiMode;
 import com.lazarecki.asteroids.Main;
 
 /** Launches the desktop (LWJGL3) application. */
@@ -31,6 +32,7 @@ public class Lwjgl3Launcher {
         configuration.setWindowedMode(960, 720);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+        configuration.setHdpiMode(HdpiMode.Pixels);
         return configuration;
     }
 }

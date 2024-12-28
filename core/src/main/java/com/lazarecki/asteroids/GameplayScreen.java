@@ -10,7 +10,9 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.lazarecki.asteroids.engine.EngineUtils;
 import com.lazarecki.asteroids.engine.systems.*;
 import com.lazarecki.asteroids.engine.systems.collision.*;
@@ -24,8 +26,13 @@ public class GameplayScreen implements Screen {
     private ShapeDrawer shapeDrawer;
     private GameViewport gameViewport;
 
+    private boolean fboEnabled = true;
+    private FitViewport fboViewport;
+    private FrameBuffer fbo;
+
     private Engine engine;
     private DebugOverlayRendererSystem debugRendererSystem;
+
 
     @Override
     public void show() {
@@ -36,8 +43,9 @@ public class GameplayScreen implements Screen {
         pixmap.drawPixel(0, 0, 0xFFFFFFFF);
         shapeDrawer = new ShapeDrawer(batch, new TextureRegion(new Texture(pixmap)));
 
-        //gameViewport = new FitViewport(Constants.gameWidth, Constants.gameHeight);
         gameViewport = new GameViewport(Constants.gameWidth, Constants.gameHeight);
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 320 * 2, 240 * 2, false);
+        fboViewport = new FitViewport(fbo.getWidth(), fbo.getHeight());
 
         debugRendererSystem = new DebugOverlayRendererSystem(batch, shapeDrawer, gameViewport);
 
@@ -81,16 +89,37 @@ public class GameplayScreen implements Screen {
                 gameViewport.setDebugZoom(1.5f);
                 engine.addSystem(debugRendererSystem);
             }
+
+            resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
 
         ScreenUtils.clear(Color.DARK_GRAY);
 
-        engine.update(delta);
+        if(fboEnabled && ! Float.isFinite(gameViewport.getDebugZoom())) {
+            fbo.begin();
+            engine.update(delta);
+            fbo.end();
+
+            fboViewport.apply(true);
+            batch.setProjectionMatrix(fboViewport.getCamera().combined);
+            batch.begin();
+            batch.draw(fbo.getColorBufferTexture(), 0, 0, fbo.getWidth(), fbo.getHeight(), 0, 0, 1, 1);
+            batch.end();
+        }
+        else {
+            engine.update(delta);
+        }
     }
 
     @Override
     public void resize(int width, int height) {
-        gameViewport.update(width, height, true);
+        if(fboEnabled && ! Float.isFinite(gameViewport.getDebugZoom())) {
+            gameViewport.update(fbo.getWidth(), fbo.getHeight(), true);
+            fboViewport.update(width, height, true);
+        }
+        else {
+            gameViewport.update(width, height, true);
+        }
     }
 
     @Override
