@@ -10,7 +10,7 @@ public final class Constants {
     // general
     public static final int gameWidth       = 20;
     public static final int gameHeight      = 15;
-    public static final float lineWidth     = 0.0333f;
+    public static final float lineWidth     = 0.075f; // 0.0333f;
     public static final Color lineColor     = new Color(0.825f, 0.825f, 1.0f, 1.0f);
 
     // system priorities

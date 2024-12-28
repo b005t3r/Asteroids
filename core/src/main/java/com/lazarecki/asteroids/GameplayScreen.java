@@ -27,8 +27,10 @@ public class GameplayScreen implements Screen {
     private GameViewport gameViewport;
 
     private boolean fboEnabled = true;
-    private FitViewport fboViewport;
-    private FrameBuffer fbo;
+    private FitViewport fboSuperSamplingViewport;
+    private FrameBuffer fboSuperSampling;
+    private FitViewport fboLowResViewport;
+    private FrameBuffer fboLowRes;
 
     private Engine engine;
     private DebugOverlayRendererSystem debugRendererSystem;
@@ -44,8 +46,12 @@ public class GameplayScreen implements Screen {
         shapeDrawer = new ShapeDrawer(batch, new TextureRegion(new Texture(pixmap)));
 
         gameViewport = new GameViewport(Constants.gameWidth, Constants.gameHeight);
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 320 * 2, 240 * 2, false);
-        fboViewport = new FitViewport(fbo.getWidth(), fbo.getHeight());
+
+        fboLowRes = new FrameBuffer(Pixmap.Format.RGBA8888, 320, 240, false);
+        fboLowResViewport = new FitViewport(fboLowRes.getWidth(), fboLowRes.getHeight());
+
+        fboSuperSampling = new FrameBuffer(Pixmap.Format.RGBA8888, fboLowRes.getWidth() * 4, fboLowRes.getHeight() * 4, false);
+        fboSuperSamplingViewport = new FitViewport(fboSuperSampling.getWidth(), fboSuperSampling.getHeight());
 
         debugRendererSystem = new DebugOverlayRendererSystem(batch, shapeDrawer, gameViewport);
 
@@ -96,14 +102,26 @@ public class GameplayScreen implements Screen {
         ScreenUtils.clear(Color.DARK_GRAY);
 
         if(fboEnabled && ! Float.isFinite(gameViewport.getDebugZoom())) {
-            fbo.begin();
+            fboSuperSampling.begin();
             engine.update(delta);
-            fbo.end();
+            fboSuperSampling.end();
 
-            fboViewport.apply(true);
-            batch.setProjectionMatrix(fboViewport.getCamera().combined);
+            fboLowRes.begin();
+            fboSuperSamplingViewport.apply(true);
+            batch.setProjectionMatrix(fboSuperSamplingViewport.getCamera().combined);
             batch.begin();
-            batch.draw(fbo.getColorBufferTexture(), 0, 0, fbo.getWidth(), fbo.getHeight(), 0, 0, 1, 1);
+            Texture fboSuperSamplingTex = fboSuperSampling.getColorBufferTexture();
+            //fboSuperSamplingTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            batch.draw(fboSuperSamplingTex, 0, 0, fboSuperSampling.getWidth(), fboSuperSampling.getHeight(), 0, 0, 1, 1);
+            batch.end();
+            fboLowRes.end();
+
+            fboLowResViewport.apply(true);
+            batch.setProjectionMatrix(fboLowResViewport.getCamera().combined);
+            batch.begin();
+            Texture fboTex = fboLowRes.getColorBufferTexture();
+            fboTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+            batch.draw(fboTex, 0, 0, fboLowRes.getWidth(), fboLowRes.getHeight(), 0, 0, 1, 1);
             batch.end();
         }
         else {
@@ -114,8 +132,9 @@ public class GameplayScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         if(fboEnabled && ! Float.isFinite(gameViewport.getDebugZoom())) {
-            gameViewport.update(fbo.getWidth(), fbo.getHeight(), true);
-            fboViewport.update(width, height, true);
+            gameViewport.update(fboSuperSampling.getWidth(), fboSuperSampling.getHeight(), true);
+            fboSuperSamplingViewport.update(fboLowRes.getWidth(), fboLowRes.getHeight(), true);
+            fboLowResViewport.update(width, height, true);
         }
         else {
             gameViewport.update(width, height, true);
