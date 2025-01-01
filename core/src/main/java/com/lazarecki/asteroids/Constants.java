@@ -11,7 +11,7 @@ public final class Constants {
     public static final int gameWidth       = 20;
     public static final int gameHeight      = 15;
     public static final float lineWidth     = 0.0666f; // 0.0333f;
-    public static final Color lineColor     = new Color(0.825f, 0.825f, 1.0f, 1.0f);
+    public static final Color lineColor     = new Color(0.75f, 0.75f, 1.0f, 1.0f);
 
     // system priorities
     public static final int asteroidSpawnerPriority             = 100;

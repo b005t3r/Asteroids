@@ -23,6 +23,7 @@ import com.lazarecki.asteroids.engine.systems.physics.*;
 import com.lazarecki.asteroids.engine.systems.rendering.*;
 import com.lazarecki.asteroids.shaders.crt.BlurShader;
 import com.lazarecki.asteroids.shaders.crt.CrtPostprocessShader;
+import com.lazarecki.asteroids.utils.GraphicsUtils;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class GameplayScreen implements Screen {
@@ -32,14 +33,12 @@ public class GameplayScreen implements Screen {
     private GameViewport gameViewport;
 
     private boolean fboEnabled = true;
-    private FitViewport fboSuperSamplingViewport;
     private FrameBuffer fboSuperSampling;
-    private FitViewport fboLowResToScreenViewport;
-    private FrameBuffer fboLowRes;
-    private FrameBuffer fboLowResBlurred;
-    private FrameBuffer fboLowResCrt;
-    private FrameBuffer fboLowResFinal;
-    private FitViewport lowResToLowResViewport;
+    private FitViewport fboLowRes3x3ToScreenViewport;
+    private FrameBuffer fboLowRes1x1;
+    private FrameBuffer fboLowRes3x3;
+    private FrameBuffer fboLowRes3x3Blurred;
+    private FrameBuffer fboLowRes3x3Crt;
 
     private BlurShader crtBlurShader;
     private CrtPostprocessShader crtPostprocessShader;
@@ -61,16 +60,13 @@ public class GameplayScreen implements Screen {
 
         gameViewport = new GameViewport(Constants.gameWidth, Constants.gameHeight);
 
-        fboLowRes = new FrameBuffer(Pixmap.Format.RGBA8888, 320, 240, false);
-        fboLowResBlurred = new FrameBuffer(Pixmap.Format.RGBA8888, fboLowRes.getWidth(), fboLowRes.getHeight(), false);
-        fboLowResCrt = new FrameBuffer(Pixmap.Format.RGBA8888, fboLowRes.getWidth(), fboLowRes.getHeight(), false);
-        fboLowResToScreenViewport = new FitViewport(fboLowRes.getWidth(), fboLowRes.getHeight());
+        fboLowRes1x1 = new FrameBuffer(Pixmap.Format.RGBA8888, 320, 240, false);
+        fboLowRes3x3 = new FrameBuffer(Pixmap.Format.RGBA8888, 3 * fboLowRes1x1.getWidth(), 3 * fboLowRes1x1.getHeight(), false);
+        fboLowRes3x3Blurred = new FrameBuffer(Pixmap.Format.RGBA8888, fboLowRes3x3.getWidth(), fboLowRes3x3.getHeight(), false);
+        fboLowRes3x3Crt = new FrameBuffer(Pixmap.Format.RGBA8888, fboLowRes3x3.getWidth(), fboLowRes3x3.getHeight(), false);
+        fboLowRes3x3ToScreenViewport = new FitViewport(fboLowRes3x3.getWidth(), fboLowRes3x3.getHeight());
 
-        fboSuperSampling = new FrameBuffer(Pixmap.Format.RGBA8888, fboLowRes.getWidth() * 4, fboLowRes.getHeight() * 4, false);
-        fboSuperSamplingViewport = new FitViewport(fboSuperSampling.getWidth(), fboSuperSampling.getHeight());
-
-        lowResToLowResViewport = new FitViewport(fboLowRes.getWidth(), fboLowRes.getHeight());
-        lowResToLowResViewport.update(fboLowRes.getWidth(), fboLowRes.getHeight(), true);
+        fboSuperSampling = new FrameBuffer(Pixmap.Format.RGBA8888, fboLowRes1x1.getWidth() * 4, fboLowRes1x1.getHeight() * 4, false);
 
         crtBlurShader = new BlurShader();
         crtPostprocessShader = new CrtPostprocessShader();
@@ -129,36 +125,19 @@ public class GameplayScreen implements Screen {
             engine.update(delta);
             fboSuperSampling.end();
 
-            Texture fboSuperSamplingTex = fboSuperSampling.getColorBufferTexture();
-            fboSuperSamplingTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            GraphicsUtils.copyFrameBuffer(fboSuperSampling, fboLowRes1x1);
+            GraphicsUtils.copyFrameBuffer(fboLowRes1x1, fboLowRes3x3, Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-            fboLowRes.begin();
-            lowResToLowResViewport.apply(true);
-            fboBatch.setProjectionMatrix(lowResToLowResViewport.getCamera().combined);
-            fboBatch.begin();
-            fboBatch.draw(fboSuperSamplingTex, 0, 0, fboLowRes.getWidth(), fboLowRes.getHeight(), 0, 0, 1, 1);
-            fboBatch.end();
-            fboLowRes.end();
-
-            Texture lowResTex = fboLowRes.getColorBufferTexture();
-            lowResTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-
-            crtBlurShader.pixelSize.set(1.0f / lowResTex.getWidth(), 1.0f / lowResTex.getHeight());
+            crtBlurShader.pixelSize.set(1.0f / fboLowRes3x3.getWidth(), 1.0f / fboLowRes3x3.getHeight());
             crtBlurShader.sigma = 0.7f;
             crtBlurShader.kernel = BlurShader.calculateKernel(crtBlurShader.sigma, crtBlurShader.kernel);
+            GraphicsUtils.copyFrameBuffer(fboLowRes3x3, fboLowRes3x3Blurred, crtBlurShader, Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-            fboLowResBlurred.begin();
-            crtBlurShader.attach(fboBatch);
-            lowResToLowResViewport.apply(true);
-            fboBatch.setProjectionMatrix(lowResToLowResViewport.getCamera().combined);
-            fboBatch.begin();
-            fboBatch.draw(lowResTex, 0, 0, lowResTex.getWidth(), lowResTex.getHeight(), 0, 0, 1, 1);
-            fboBatch.end();
-            crtBlurShader.detach(fboBatch);
-            fboLowResBlurred.end();
-
-            Texture blurredTex = fboLowResBlurred.getColorBufferTexture();
+            Texture blurredTex = fboLowRes3x3Blurred.getColorBufferTexture();
             blurredTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+            Texture lowResTex = fboLowRes3x3.getColorBufferTexture();
+            lowResTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
             crtPostprocessShader.main = lowResTex;
             crtPostprocessShader.blurred = blurredTex;
@@ -189,29 +168,22 @@ public class GameplayScreen implements Screen {
             crtPostprocessShader.blackPoint.set(Color.BLACK).lerp(Color.WHITE, 35.0f / 255.0f);
             crtPostprocessShader.whitePoint.set(Color.WHITE);
 
-            crtPostprocessShader.interSpeed = 3.0f;
-            crtPostprocessShader.interSplit = 0.25f;
-            crtPostprocessShader.interStr = 0.0f;
-            crtPostprocessShader.interWidth = 25.0f;
+            crtPostprocessShader.interSpeed = 2.0f;
+            crtPostprocessShader.interSplit = 0.55f;
+            crtPostprocessShader.interStr = 0.05f;
+            crtPostprocessShader.interWidth = 200.0f;
 
             crtPostprocessShader.aberStr = -1.25f;
 
-            fboLowResCrt.begin();
-            crtPostprocessShader.attach(fboBatch);
-            lowResToLowResViewport.apply(true);
-            fboBatch.setProjectionMatrix(lowResToLowResViewport.getCamera().combined);
-            fboBatch.begin();
-            fboBatch.draw(lowResTex, 0, 0, lowResTex.getWidth(), lowResTex.getHeight(), 0, 0, 1, 1);
-            fboBatch.end();
-            crtPostprocessShader.detach(fboBatch);
-            fboLowResCrt.end();
+            GraphicsUtils.copyFrameBuffer(fboLowRes3x3, fboLowRes3x3Crt, crtPostprocessShader, Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-            Texture outputTex = fboLowResCrt.getColorBufferTexture();
-            outputTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-            fboLowResToScreenViewport.apply(true);
-            fboBatch.setProjectionMatrix(fboLowResToScreenViewport.getCamera().combined);
+            Texture outputTex = fboLowRes3x3Crt.getColorBufferTexture();
+            outputTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+            fboLowRes3x3ToScreenViewport.apply(true);
+            fboBatch.setProjectionMatrix(fboLowRes3x3ToScreenViewport.getCamera().combined);
             fboBatch.begin();
-            fboBatch.draw(outputTex, 0, 0, fboLowRes.getWidth(), fboLowRes.getHeight(), 0, 0, 1, 1);
+            fboBatch.draw(outputTex, 0, 0, fboLowRes3x3.getWidth(), fboLowRes3x3.getHeight(), 0, 0, 1, 1);
             fboBatch.end();
         }
         else {
@@ -223,7 +195,7 @@ public class GameplayScreen implements Screen {
     public void resize(int width, int height) {
         if(fboEnabled && ! Float.isFinite(gameViewport.getDebugZoom())) {
             gameViewport.update(fboSuperSampling.getWidth(), fboSuperSampling.getHeight(), true);
-            fboLowResToScreenViewport.update(width, height, true);
+            fboLowRes3x3ToScreenViewport.update(width, height, true);
         }
         else {
             gameViewport.update(width, height, true);
