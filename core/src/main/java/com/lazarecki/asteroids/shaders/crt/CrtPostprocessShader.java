@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool;
 import com.lazarecki.asteroids.shaders.AbstractShader;
 
@@ -108,7 +107,7 @@ public class CrtPostprocessShader extends AbstractShader {
 
     @Override
     protected ShaderProgram create() {
-        return new ShaderProgram(defaultVertexShader, Gdx.files.internal("shaders/crt/crt_postprocess.frag").readString());
+        return new ShaderProgram(defaultVertexShader, Gdx.files.internal("shaders/crt/postprocess.frag").readString());
     }
 
     @Override

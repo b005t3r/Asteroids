@@ -13,21 +13,26 @@ public final class GraphicsUtils {
     private static final OrthographicCamera camera = new OrthographicCamera(1, 1);
 
     public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst) {
-        copyFrameBuffer(src, dst, null, null, null);
+        copyFrameBuffer(src, dst, Color.BLACK, null, null, null);
     }
 
-    public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst, AbstractShader shader) {
-        copyFrameBuffer(src, dst, shader, null, null);
+    public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst, Color clearColor) {
+        copyFrameBuffer(src, dst, clearColor, null, null, null);
     }
 
-    public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst, Texture.TextureFilter minFilter, Texture.TextureFilter maxFilter) {
-        copyFrameBuffer(src, dst, null, minFilter, maxFilter);
+    public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst, Color clearColor, AbstractShader shader) {
+        copyFrameBuffer(src, dst, clearColor, shader, null, null);
     }
 
-    public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst, AbstractShader shader, Texture.TextureFilter minFilter, Texture.TextureFilter maxFilter) {
+    public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst, Color clearColor, Texture.TextureFilter minFilter, Texture.TextureFilter maxFilter) {
+        copyFrameBuffer(src, dst, clearColor, null, minFilter, maxFilter);
+    }
+
+    public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst, Color clearColor, AbstractShader shader, Texture.TextureFilter minFilter, Texture.TextureFilter maxFilter) {
         dst.begin();
 
-        ScreenUtils.clear(Color.BLACK);
+        if(clearColor != null)
+            ScreenUtils.clear(clearColor);
 
         Texture sourceTexture = src.getColorBufferTexture();
         sourceTexture.setFilter(

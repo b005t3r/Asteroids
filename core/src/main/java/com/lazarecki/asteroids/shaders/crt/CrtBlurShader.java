@@ -2,12 +2,11 @@ package com.lazarecki.asteroids.shaders.crt;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.lazarecki.asteroids.shaders.AbstractShader;
 
-public class BlurShader extends AbstractShader {
+public class CrtBlurShader extends AbstractShader {
     public Vector2 pixelSize = new Vector2(Float.NaN, Float.NaN);
     public float sigma = Float.NaN;
     public Vector3 kernel = new Vector3(Float.NaN, Float.NaN, Float.NaN);
