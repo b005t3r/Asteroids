@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.lazarecki.asteroids.engine.EngineUtils;
@@ -143,7 +144,7 @@ public class GameplayScreen implements Screen {
             lowResTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
             crtBlurShader.pixelSize.set(1.0f / lowResTex.getWidth(), 1.0f / lowResTex.getHeight());
-            crtBlurShader.sigma = 0.9f;
+            crtBlurShader.sigma = 0.7f;
             crtBlurShader.kernel = BlurShader.calculateKernel(crtBlurShader.sigma, crtBlurShader.kernel);
 
             fboLowResBlurred.begin();
@@ -161,11 +162,42 @@ public class GameplayScreen implements Screen {
 
             crtPostprocessShader.main = lowResTex;
             crtPostprocessShader.blurred = blurredTex;
+            crtPostprocessShader.pixelSize.set(1.0f / lowResTex.getWidth(), 1.0f / lowResTex.getHeight());
+            crtPostprocessShader.time = time;
+
+            crtPostprocessShader.bleedDist = 0.75f;
+            crtPostprocessShader.bleedStr = 0.5f;
+            crtPostprocessShader.blurStr = 1.0f - 0.6f;
+            crtPostprocessShader.rgbMaskSub = 0.6f;
+            crtPostprocessShader.rgbMaskSep = 1.0f - 0.1f;
+            crtPostprocessShader.rgbMaskStr = MathUtils.lerp(0.0f, 0.3f, 0.6f);
+
+            crtPostprocessShader.colorNoiseMode = CrtPostprocessShader.NoiseMode.add;
+            crtPostprocessShader.colorNoiseStr = MathUtils.lerp(0.0f, 0.4f, 0.15f);
+            crtPostprocessShader.monoNoiseMode = CrtPostprocessShader.NoiseMode.max;
+            crtPostprocessShader.monoNoiseStr = MathUtils.lerp(0.0f, 0.4f, 0.25f);
+
+            crtPostprocessShader.colorMat = CrtPostprocessShader.calculateColorMatrix(
+                MathUtils.lerp(0.8f, 1.2f, (0.2f + 1.0f) / 2.0f) - 1.0f,
+                MathUtils.lerp(0.5f, 1.5f, (0.1f + 1.0f) / 2.0f),
+                MathUtils.lerp(0.0f, 2.0f, (-0.05f + 1.0f) / 2.0f),
+                crtPostprocessShader.colorMat
+            );
+
+            crtPostprocessShader.minLevels.set(Color.BLACK);
+            crtPostprocessShader.maxLevels.set(Color.BLACK).lerp(Color.WHITE, 235.0f / 255.0f);
+            crtPostprocessShader.blackPoint.set(Color.BLACK).lerp(Color.WHITE, 35.0f / 255.0f);
+            crtPostprocessShader.whitePoint.set(Color.WHITE);
+
+            crtPostprocessShader.interSpeed = 3.0f;
+            crtPostprocessShader.interSplit = 0.25f;
+            crtPostprocessShader.interStr = 0.0f;
+            crtPostprocessShader.interWidth = 25.0f;
+
+            crtPostprocessShader.aberStr = -1.25f;
 
             fboLowResCrt.begin();
-            //blurredTex.bind(1);
             crtPostprocessShader.attach(fboBatch);
-            //lowResTex.bind(0);
             lowResToLowResViewport.apply(true);
             fboBatch.setProjectionMatrix(lowResToLowResViewport.getCamera().combined);
             fboBatch.begin();
