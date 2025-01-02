@@ -33,7 +33,6 @@ public class GameplayScreen implements Screen {
     private ShapeDrawer shapeDrawer;
     private GameViewport gameViewport;
 
-    private boolean fboEnabled = true;
     private FrameBuffer fboSuperSampling;
     private FitViewport fboLowRes3x3ToScreenViewport;
     private FrameBuffer fboLowRes1x1;
@@ -43,6 +42,7 @@ public class GameplayScreen implements Screen {
     private Color fboClearColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);
     private Color bgColor = new Color(Color.DARK_GRAY).mul(Color.DARK_GRAY);
 
+    private boolean crtEnabled = true;
     private CrtBlurShader crtBlurShader;
     private CrtPostprocessShader crtPostprocessShader;
     private CrtFinalShader crtFinalShader;
@@ -108,6 +108,10 @@ public class GameplayScreen implements Screen {
             resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
+            crtEnabled = ! crtEnabled;
+        }
+
         if(Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             float debugZoom = gameViewport.getDebugZoom();
 
@@ -125,86 +129,89 @@ public class GameplayScreen implements Screen {
 
         ScreenUtils.clear(bgColor);
 
-        if(fboEnabled && ! Float.isFinite(gameViewport.getDebugZoom())) {
+        if(! Float.isFinite(gameViewport.getDebugZoom())) {
+            shapeDrawer.setDefaultSnap(true);
             fboSuperSampling.begin();
             engine.update(delta);
             fboSuperSampling.end();
 
-            GraphicsUtils.copyFrameBuffer(fboSuperSampling, fboLowRes1x1, fboClearColor);
+            GraphicsUtils.copyFrameBuffer(fboSuperSampling, fboLowRes1x1, fboClearColor/*, Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest*/);
             GraphicsUtils.copyFrameBuffer(fboLowRes1x1, fboLowRes3x3, fboClearColor, Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-            crtBlurShader.pixelSize.set(1.0f / fboLowRes3x3.getWidth(), 1.0f / fboLowRes3x3.getHeight());
-            crtBlurShader.sigma = 0.7f;
-            crtBlurShader.kernel = CrtBlurShader.calculateKernel(crtBlurShader.sigma, crtBlurShader.kernel);
-            GraphicsUtils.copyFrameBuffer(fboLowRes3x3, fboLowRes3x3Blurred, fboClearColor, crtBlurShader/*, Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest*/);
+            if(crtEnabled) {
+                crtBlurShader.pixelSize.set(1.0f / fboLowRes3x3.getWidth(), 1.0f / fboLowRes3x3.getHeight());
+                crtBlurShader.sigma = 0.7f;
+                crtBlurShader.kernel = CrtBlurShader.calculateKernel(crtBlurShader.sigma, crtBlurShader.kernel);
+                GraphicsUtils.copyFrameBuffer(fboLowRes3x3, fboLowRes3x3Blurred, fboClearColor, crtBlurShader);
 
-            Texture blurredTex = fboLowRes3x3Blurred.getColorBufferTexture();
-            blurredTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+                Texture blurredTex = fboLowRes3x3Blurred.getColorBufferTexture();
+                blurredTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-            Texture lowResTex = fboLowRes3x3.getColorBufferTexture();
-            lowResTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+                Texture lowResTex = fboLowRes3x3.getColorBufferTexture();
+                lowResTex.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-            crtPostprocessShader.main = lowResTex;
-            crtPostprocessShader.blurred = blurredTex;
-            crtPostprocessShader.pixelSize.set(1.0f / fboLowRes3x3.getWidth(), 1.0f / fboLowRes3x3.getHeight());
-            crtPostprocessShader.time = time;
+                crtPostprocessShader.main = lowResTex;
+                crtPostprocessShader.blurred = blurredTex;
+                crtPostprocessShader.pixelSize.set(1.0f / fboLowRes3x3.getWidth(), 1.0f / fboLowRes3x3.getHeight());
+                crtPostprocessShader.time = time;
 
-            crtPostprocessShader.bleedDist = 0.75f;
-            crtPostprocessShader.bleedStr = 0.5f;
-            crtPostprocessShader.blurStr = 1.0f - 0.6f;
-            crtPostprocessShader.rgbMaskSub = 0.6f;
-            crtPostprocessShader.rgbMaskSep = 1.0f - 0.1f;
-            crtPostprocessShader.rgbMaskStr = MathUtils.lerp(0.0f, 0.3f, 0.6f);
+                crtPostprocessShader.bleedDist = 0.85f; // 0.75f;
+                crtPostprocessShader.bleedStr = 0.95f; // 0.5f;
+                crtPostprocessShader.blurStr = 1.0f - 0.6f;
+                crtPostprocessShader.rgbMaskSub = 0.6f;
+                crtPostprocessShader.rgbMaskSep = 1.0f - 0.1f;
+                crtPostprocessShader.rgbMaskStr = MathUtils.lerp(0.0f, 0.3f, 0.6f);
 
-            crtPostprocessShader.colorNoiseMode = CrtPostprocessShader.NoiseMode.add;
-            crtPostprocessShader.colorNoiseStr = MathUtils.lerp(0.0f, 0.4f, 0.15f);
-            crtPostprocessShader.monoNoiseMode = CrtPostprocessShader.NoiseMode.max;
-            crtPostprocessShader.monoNoiseStr = MathUtils.lerp(0.0f, 0.4f, 0.25f);
+                crtPostprocessShader.colorNoiseMode = CrtPostprocessShader.NoiseMode.add;
+                crtPostprocessShader.colorNoiseStr = MathUtils.lerp(0.0f, 0.4f, 0.15f);
+                crtPostprocessShader.monoNoiseMode = CrtPostprocessShader.NoiseMode.max;
+                crtPostprocessShader.monoNoiseStr = MathUtils.lerp(0.0f, 0.4f, 0.25f);
 
-            crtPostprocessShader.colorMat = CrtPostprocessShader.calculateColorMatrix(
-                MathUtils.lerp(0.8f, 1.2f, (0.2f + 1.0f) / 2.0f) - 1.0f,
-                MathUtils.lerp(0.5f, 1.5f, (0.1f + 1.0f) / 2.0f),
-                MathUtils.lerp(0.0f, 2.0f, (-0.05f + 1.0f) / 2.0f),
-                crtPostprocessShader.colorMat
-            );
+                crtPostprocessShader.colorMat = CrtPostprocessShader.calculateColorMatrix(
+                    MathUtils.lerp(0.8f, 1.2f, (0.2f + 1.0f) / 2.0f) - 1.0f,
+                    MathUtils.lerp(0.5f, 1.5f, (0.1f + 1.0f) / 2.0f),
+                    MathUtils.lerp(0.0f, 2.0f, (-0.05f + 1.0f) / 2.0f),
+                    crtPostprocessShader.colorMat
+                );
 
-            crtPostprocessShader.minLevels.set(Color.BLACK);
-            crtPostprocessShader.maxLevels.set(Color.BLACK).lerp(Color.WHITE, 235.0f / 255.0f);
-            crtPostprocessShader.blackPoint.set(Color.BLACK).lerp(Color.WHITE, 25.0f / 255.0f);
-            crtPostprocessShader.whitePoint.set(Color.WHITE);
+                crtPostprocessShader.minLevels.set(Color.BLACK);
+                crtPostprocessShader.maxLevels.set(Color.BLACK).lerp(Color.WHITE, 235.0f / 255.0f);
+                crtPostprocessShader.blackPoint.set(Color.BLACK).lerp(Color.WHITE, 25.0f / 255.0f);
+                crtPostprocessShader.whitePoint.set(Color.WHITE);
 
-            crtPostprocessShader.interSpeed = 2.0f;
-            crtPostprocessShader.interSplit = 0.55f;
-            crtPostprocessShader.interStr = 0.05f;
-            crtPostprocessShader.interWidth = 200.0f;
+                crtPostprocessShader.interSpeed = 2.0f;
+                crtPostprocessShader.interSplit = 0.55f;
+                crtPostprocessShader.interStr = 0.05f;
+                crtPostprocessShader.interWidth = 200.0f;
 
-            crtPostprocessShader.aberStr = -1.25f;
+                crtPostprocessShader.aberStr = -1.0f; // -1.25f;
 
-            GraphicsUtils.copyFrameBuffer(fboLowRes3x3, fboLowRes3x3Crt, fboClearColor, crtPostprocessShader/*, Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest*/);
+                GraphicsUtils.copyFrameBuffer(fboLowRes3x3, fboLowRes3x3Crt, fboClearColor, crtPostprocessShader);
 
-            float realCurvatureX = MathUtils.lerp(0.25f, 0.45f, 0.6f);
-            float realCurvatureY = MathUtils.lerp(0.25f, 0.45f, 0.6f);
-            crtFinalShader.pixelSize.set(1.0f / fboLowRes3x3.getWidth(), 1.0f / fboLowRes3x3.getHeight());
-            crtFinalShader.maskMode = CrtFinalShader.MaskMode.denser;
-            crtFinalShader.maskStrength = 0.35f / 10.0f;
-            crtFinalShader.vignetteSize = 1.0f - 0.35f;
-            crtFinalShader.vignetteStrength = 0.1f;
-            crtFinalShader.crtBend.set(
-                MathUtils.lerp(1.0f, 100.0f, (float) ((1.0f - realCurvatureX) / Math.exp(10.0f * realCurvatureX))),
-                MathUtils.lerp(1.0f, 100.0f, (float) ((1.0f - realCurvatureY) / Math.exp(10.0f * realCurvatureY)))
-            );
-            crtFinalShader.crtOverscan = MathUtils.lerp(-0.00125f, 0.25f, 0.1f);
+                float realCurvatureX = MathUtils.lerp(0.25f, 0.45f, 0.6f);
+                float realCurvatureY = MathUtils.lerp(0.25f, 0.45f, 0.6f);
+                crtFinalShader.pixelSize.set(1.0f / fboLowRes3x3.getWidth(), 1.0f / fboLowRes3x3.getHeight());
+                crtFinalShader.maskMode = CrtFinalShader.MaskMode.denser;
+                crtFinalShader.maskStrength = 0.35f / 10.0f;
+                crtFinalShader.vignetteSize = 1.0f - 0.35f;
+                crtFinalShader.vignetteStrength = 0.1f;
+                crtFinalShader.crtBend.set(
+                    MathUtils.lerp(1.0f, 100.0f, (float) ((1.0f - realCurvatureX) / Math.exp(10.0f * realCurvatureX))),
+                    MathUtils.lerp(1.0f, 100.0f, (float) ((1.0f - realCurvatureY) / Math.exp(10.0f * realCurvatureY)))
+                );
+                crtFinalShader.crtOverscan = MathUtils.lerp(-0.00125f, 0.25f, 0.1f);
 
-            Texture outputTex = fboLowRes3x3Crt.getColorBufferTexture();
+                GraphicsUtils.copyFrameBuffer(fboLowRes3x3Crt, fboLowRes3x3, fboClearColor, crtFinalShader);
+            }
+
+            Texture outputTex = fboLowRes3x3.getColorBufferTexture();
             outputTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
             fboLowRes3x3ToScreenViewport.apply(true);
             fboBatch.setProjectionMatrix(fboLowRes3x3ToScreenViewport.getCamera().combined);
-            crtFinalShader.attach(fboBatch);
             fboBatch.begin();
             fboBatch.draw(outputTex, 0, 0, fboLowRes3x3.getWidth(), fboLowRes3x3.getHeight(), 0, 0, 1, 1);
             fboBatch.end();
-            crtFinalShader.detach(fboBatch);
         }
         else {
             engine.update(delta);
@@ -213,7 +220,7 @@ public class GameplayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        if(fboEnabled && ! Float.isFinite(gameViewport.getDebugZoom())) {
+        if(! Float.isFinite(gameViewport.getDebugZoom())) {
             gameViewport.update(fboSuperSampling.getWidth(), fboSuperSampling.getHeight(), true);
             fboLowRes3x3ToScreenViewport.update(width, height, true);
         }
@@ -239,5 +246,4 @@ public class GameplayScreen implements Screen {
     public void dispose() {
         batch.dispose();
     }
-
 }
