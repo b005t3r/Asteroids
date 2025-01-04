@@ -188,8 +188,8 @@ public class GameplayScreen implements Screen {
 
                 GraphicsUtils.copyFrameBuffer(fboLowRes3x3, fboLowRes3x3Crt, fboClearColor, crtPostprocessShader);
 
-                float realCurvatureX = MathUtils.lerp(0.25f, 0.45f, 0.6f);
-                float realCurvatureY = MathUtils.lerp(0.25f, 0.45f, 0.6f);
+                float realCurvatureX = MathUtils.lerp(0.25f, 0.45f, 0.4f);
+                float realCurvatureY = MathUtils.lerp(0.25f, 0.45f, 0.4f);
                 crtFinalShader.pixelSize.set(1.0f / fboLowRes3x3.getWidth(), 1.0f / fboLowRes3x3.getHeight());
                 crtFinalShader.maskMode = CrtFinalShader.MaskMode.denser;
                 crtFinalShader.maskStrength = 0.35f / 10.0f;
@@ -199,7 +199,7 @@ public class GameplayScreen implements Screen {
                     MathUtils.lerp(1.0f, 100.0f, (float) ((1.0f - realCurvatureX) / Math.exp(10.0f * realCurvatureX))),
                     MathUtils.lerp(1.0f, 100.0f, (float) ((1.0f - realCurvatureY) / Math.exp(10.0f * realCurvatureY)))
                 );
-                crtFinalShader.crtOverscan = MathUtils.lerp(-0.00125f, 0.25f, 0.1f);
+                crtFinalShader.crtOverscan = MathUtils.lerp(0.05f, 0.25f, 0.1f);
 
                 GraphicsUtils.copyFrameBuffer(fboLowRes3x3Crt, fboLowRes3x3, fboClearColor, crtFinalShader);
             }
