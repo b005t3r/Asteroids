@@ -26,6 +26,7 @@ public final class Mappers {
     public static final ComponentMapper<BulletHitComponent> bulletHit = ComponentMapper.getFor(BulletHitComponent.class);
     public static final ComponentMapper<FiringComponent> firing = ComponentMapper.getFor(FiringComponent.class);
     public static final ComponentMapper<FiredComponent> fired = ComponentMapper.getFor(FiredComponent.class);
+    public static final ComponentMapper<ScoreCounterComponent> score = ComponentMapper.getFor(ScoreCounterComponent.class);
     public static final ComponentMapper<ShipComponent> ship = ComponentMapper.getFor(ShipComponent.class);
 
     // physics

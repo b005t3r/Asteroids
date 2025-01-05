@@ -10,18 +10,21 @@ public final class Constants {
     // general
     public static final int gameWidth       = 20;
     public static final int gameHeight      = 15;
-    public static final float lineWidth     = 0.07f; // 0.0333f;
+    public static final float lineWidth     = 0.08f; // 0.0333f;
     public static final Color lineColor     = new Color(0.75f, 0.75f, 1.0f, 1.0f);
 
     // system priorities
+    public static final int runawayAsteroidCleanUpPriority      = 99;
     public static final int asteroidSpawnerPriority             = 100;
     public static final int bulletCooldownPriority              = 200;
     public static final int bulletSpawnerPriority               = 201;
     public static final int bulletCleanUpPriority               = 202;
     public static final int collisionCleanUpPriority            = 399;
     public static final int collisionDetectorPriority           = 400;
-    public static final int asteroidCollisionPriority           = 401;
-    public static final int asteroidBulletCollisionPriority     = 402;
+    public static final int collisionHandlerPriority            = 401;
+    public static final int scoreCounterPriority                = 410;
+    public static final int asteroidBulletCollisionPriority     = 412;
+    public static final int shipAsteroidCollisionPriority       = 413;
     public static final int objectMovementPriority              = 500;
     public static final int bulletMovementPriority              = 501;
     public static final int outOfBoundsPriority                 = 502;
@@ -32,6 +35,7 @@ public final class Constants {
     public static final int gameBackgroundRenderingPriority     = 900;
     public static final int gameObjectRenderingPriority         = 1000;
     public static final int bulletRenderingPriority             = 1100;
+    public static final int scoreRenderingPriority              = 1110;
     public static final int debugOverlayRenderingPriority       = 2000;
 
     // ship
@@ -62,8 +66,8 @@ public final class Constants {
     // asteroids
     public static final float asteroidSpawnerInterval                       = 1.0f;
     public static final int asteroidSpawnThreshold                          = 8;
-    public static final float asteroidMinLinearVelocity                     = 4.5f * 0.05f;
-    public static final float asteroidMaxLinearVelocity                     = 4.5f * 0.25f;
+    public static final float asteroidMinLinearVelocity                     = 4.5f * 0.1f;
+    public static final float asteroidMaxLinearVelocity                     = 4.5f * 0.35f;
     public static final float asteroidMaxCounterClockwiseAngularVelocity    = 180 * MathUtils.degreesToRadians * 0.25f;
     public static final float asteroidMaxClockwiseAngularVelocity           = -asteroidMaxCounterClockwiseAngularVelocity;
     public static final ObjectMap<Constants.AsteroidType, Array<Array<Vector2>>> asteroidTemplates = createAsteroidTemplates();
@@ -101,7 +105,7 @@ public final class Constants {
     }
 
     public enum AsteroidType {
-        epic(1.75f),
+        epic(2.25f),
         large(epic.radius * 0.6f),
         medium(large.radius * 0.6f),
         small(medium.radius * 0.6f);

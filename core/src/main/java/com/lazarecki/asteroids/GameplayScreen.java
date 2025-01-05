@@ -1,6 +1,7 @@
 package com.lazarecki.asteroids;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -13,9 +14,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.lazarecki.asteroids.engine.EngineUtils;
+import com.lazarecki.asteroids.engine.components.logic.ScoreCounterComponent;
 import com.lazarecki.asteroids.engine.systems.*;
 import com.lazarecki.asteroids.engine.systems.collision.*;
 import com.lazarecki.asteroids.engine.systems.logic.*;
@@ -47,6 +54,11 @@ public class GameplayScreen implements Screen {
     private CrtPostprocessShader crtPostprocessShader;
     private CrtFinalShader crtFinalShader;
 
+    private Skin skin;
+    private ScreenViewport uiViewport;
+    private Stage stage;
+    private Label scoreLabel;
+
     private Engine engine;
     private DebugOverlayRendererSystem debugRendererSystem;
 
@@ -75,10 +87,31 @@ public class GameplayScreen implements Screen {
         crtBlurShader = new CrtBlurShader();
         crtPostprocessShader = new CrtPostprocessShader();
         crtFinalShader = new CrtFinalShader();
+
+        skin = new Skin(Gdx.files.internal("skins/commodore64ui/uiskin.json"));
+        uiViewport = new ScreenViewport();
+        uiViewport.setUnitsPerPixel(2);
+        stage = new Stage(uiViewport);
+        scoreLabel = new Label("00000", skin, "optional");
+        scoreLabel.setColor(Constants.lineColor);
+
+        Table root = new Table();
+        root.setFillParent(true);
+        stage.addActor(root);
+
+        root.add(scoreLabel).expand().top().right().padRight(8).padTop(8);
+
         debugRendererSystem = new DebugOverlayRendererSystem(batch, shapeDrawer, gameViewport);
 
         engine = new PooledEngine();
+
+        Entity score = engine.createEntity();
+        score.addAndReturn(engine.createComponent(ScoreCounterComponent.class)).score = 0;
+        engine.addEntity(score);
+
         engine.addEntity(EngineUtils.createShipEntity(engine));
+
+        engine.addSystem(new RunawayAsteroidCleanUpSystem());
         engine.addSystem(new AsteroidSpawnerSystem());
         engine.addSystem(new BulletCooldownSystem());
         engine.addSystem(new BulletSpawnerSystem());
@@ -86,7 +119,9 @@ public class GameplayScreen implements Screen {
         engine.addSystem(new CollisionCleanUpSystem());
         engine.addSystem(new CollisionDetectorSystem());
         engine.addSystem(new CollisionHandlerSystem());
+        engine.addSystem(new ScoreCounterSystem());
         engine.addSystem(new AsteroidBulletHitHandlerSystem());
+        engine.addSystem(new ShipCollisionHandlerSystem());
         engine.addSystem(new ObjectMovementSystem());
         engine.addSystem(new BulletMovementSystem());
         engine.addSystem(new BulletCollisionHandlerSystem());
@@ -96,12 +131,15 @@ public class GameplayScreen implements Screen {
         engine.addSystem(new InputSystem());
         engine.addSystem(new BackgroundRendererSystem(batch, shapeDrawer, gameViewport));
         engine.addSystem(new ObjectRendererSystem(batch, shapeDrawer, gameViewport));
+        engine.addSystem(new ScoreRendererSystem(scoreLabel));
         engine.addSystem(new BulletRenderingSystem(batch, shapeDrawer, gameViewport));
     }
 
     @Override
     public void render(float delta) {
         time += delta;
+
+        stage.act();
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
             show();
@@ -136,6 +174,11 @@ public class GameplayScreen implements Screen {
             fboSuperSampling.end();
 
             GraphicsUtils.copyFrameBuffer(fboSuperSampling, fboLowRes1x1, fboClearColor/*, Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest*/);
+
+            fboLowRes1x1.begin();
+            stage.draw();
+            fboLowRes1x1.end();
+
             GraphicsUtils.copyFrameBuffer(fboLowRes1x1, fboLowRes3x3, fboClearColor, Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
             if(crtEnabled) {
@@ -222,10 +265,12 @@ public class GameplayScreen implements Screen {
     public void resize(int width, int height) {
         if(! Float.isFinite(gameViewport.getDebugZoom())) {
             gameViewport.update(fboSuperSampling.getWidth(), fboSuperSampling.getHeight(), true);
+            uiViewport.update(fboLowRes1x1.getWidth(), fboLowRes1x1.getHeight(), true);
             fboLowRes3x3ToScreenViewport.update(width, height, true);
         }
         else {
             gameViewport.update(width, height, true);
+            uiViewport.update(width, height, true);
         }
     }
 

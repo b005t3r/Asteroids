@@ -11,7 +11,6 @@ import com.lazarecki.asteroids.engine.components.collision.ProcessedCollisionCom
 import com.lazarecki.asteroids.engine.components.collision.DetectedCollisionComponent;
 import com.lazarecki.asteroids.engine.components.location.BoundingRadiusComponent;
 import com.lazarecki.asteroids.engine.components.location.PositionComponent;
-import com.lazarecki.asteroids.engine.components.logic.AsteroidComponent;
 import com.lazarecki.asteroids.engine.components.physics.LinearVelocityComponent;
 
 public class CollisionHandlerSystem extends IteratingSystem {
@@ -21,7 +20,7 @@ public class CollisionHandlerSystem extends IteratingSystem {
                     PositionComponent.class, BoundingRadiusComponent.class,
                     LinearVelocityComponent.class)
                 .get(),
-            Constants.asteroidCollisionPriority);
+            Constants.collisionHandlerPriority);
     }
 
     @Override

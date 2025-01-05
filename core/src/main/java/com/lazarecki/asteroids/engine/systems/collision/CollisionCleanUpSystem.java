@@ -15,7 +15,6 @@ import com.lazarecki.asteroids.engine.components.location.ShapeComponent;
 public class CollisionCleanUpSystem extends IteratingSystem {
     public CollisionCleanUpSystem() {
         super(Family
-                .all(DetectedCollisionComponent.class)
                 .all(ProcessedCollisionComponent.class, ShapeComponent.class, PositionComponent.class, BoundingRadiusComponent.class)
             .get(),
             Constants.collisionCleanUpPriority

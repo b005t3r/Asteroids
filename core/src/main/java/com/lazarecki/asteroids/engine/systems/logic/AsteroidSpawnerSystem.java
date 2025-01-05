@@ -8,6 +8,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.lazarecki.asteroids.Constants;
 import com.lazarecki.asteroids.engine.EngineUtils;
+import com.lazarecki.asteroids.engine.components.Mappers;
 import com.lazarecki.asteroids.engine.components.logic.AsteroidComponent;
 
 public class AsteroidSpawnerSystem extends IntervalSystem {
@@ -24,7 +25,21 @@ public class AsteroidSpawnerSystem extends IntervalSystem {
 
     @Override
     protected void updateInterval() {
-        if(asteroids.size() >= Constants.asteroidSpawnThreshold)
+        int asteroidsSize = 0;
+
+        for(int i = 0; i < asteroids.size(); ++i) {
+            Entity asteroid = asteroids.get(i);
+
+            AsteroidComponent as = Mappers.asteroid.get(asteroid);
+
+            if(as.asteroidType != Constants.AsteroidType.epic
+            && as.asteroidType != Constants.AsteroidType.large)
+                continue;
+
+            asteroidsSize++;
+        }
+
+        if(asteroidsSize >= Constants.asteroidSpawnThreshold)
             return;
 
         final Engine engine = getEngine();
@@ -35,23 +50,5 @@ public class AsteroidSpawnerSystem extends IntervalSystem {
         EngineUtils.spawnAsteroid(entity, engine);
 
         engine.addEntity(entity);
-/*
-        if(asteroids.size() >= 2)
-            return;
-
-        final Engine engine = getEngine();
-
-        Entity epic = EngineUtils.createAsteroidEntity(Constants.AsteroidType.epic, engine);
-        Entity small = EngineUtils.createAsteroidEntity(Constants.AsteroidType.small, engine);
-
-        EngineUtils.spawnAsteroid(epic, engine);
-        EngineUtils.spawnAsteroid(small, engine);
-
-        Mappers.position.get(epic).position.set(Constants.gameWidth / 2, Constants.gameHeight / 2);
-        Mappers.position.get(small).position.set(Constants.gameWidth / 2, Constants.gameHeight / 2);
-
-        engine.addEntity(epic);
-        engine.addEntity(small);
-*/
     }
 }

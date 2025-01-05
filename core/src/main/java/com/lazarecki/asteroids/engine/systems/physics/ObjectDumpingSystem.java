@@ -17,8 +17,7 @@ public class ObjectDumpingSystem extends IteratingSystem {
 
     public ObjectDumpingSystem() {
         super(Family
-            .all(LinearDumpingComponent.class, LinearVelocityComponent.class)
-            .all(AngularDumpingComponent.class, AngularVelocityComponent.class)
+            .one(LinearDumpingComponent.class, AngularDumpingComponent.class)
             .get(),
             Constants.objectDumpingPriority
         );
