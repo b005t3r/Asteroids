@@ -64,7 +64,7 @@ public final class Constants {
     public static final float bulletCooldown                                = 0.2f;
 
     // asteroids
-    public static final float asteroidSpawnerInterval                       = 1.0f;
+    public static final float asteroidSpawnerInterval                       = 4.0f;
     public static final int asteroidSpawnThreshold                          = 8;
     public static final float asteroidMinLinearVelocity                     = 4.5f * 0.1f;
     public static final float asteroidMaxLinearVelocity                     = 4.5f * 0.35f;
