@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.lazarecki.asteroids.shaders.AbstractShader;
+import com.lazarecki.asteroids.shaders.Shader;
 
 public final class GraphicsUtils {
     private static final SpriteBatch batch = new SpriteBatch();
@@ -20,7 +20,7 @@ public final class GraphicsUtils {
         copyFrameBuffer(src, dst, clearColor, null, null, null);
     }
 
-    public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst, Color clearColor, AbstractShader shader) {
+    public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst, Color clearColor, Shader shader) {
         copyFrameBuffer(src, dst, clearColor, shader, null, null);
     }
 
@@ -28,7 +28,7 @@ public final class GraphicsUtils {
         copyFrameBuffer(src, dst, clearColor, null, minFilter, maxFilter);
     }
 
-    public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst, Color clearColor, AbstractShader shader, Texture.TextureFilter minFilter, Texture.TextureFilter maxFilter) {
+    public static void copyFrameBuffer(FrameBuffer src, FrameBuffer dst, Color clearColor, Shader shader, Texture.TextureFilter minFilter, Texture.TextureFilter maxFilter) {
         dst.begin();
 
         if(clearColor != null)

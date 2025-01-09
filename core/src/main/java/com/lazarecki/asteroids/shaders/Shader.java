@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
 
-public abstract class AbstractShader implements Disposable {
+public abstract class Shader implements Disposable {
     static {
         ShaderProgram.pedantic = false;
     }
@@ -42,7 +42,7 @@ public abstract class AbstractShader implements Disposable {
 
     protected ShaderProgram program;
 
-    public AbstractShader() {
+    public Shader() {
         this.program = create();
 
         if(! this.program.isCompiled())

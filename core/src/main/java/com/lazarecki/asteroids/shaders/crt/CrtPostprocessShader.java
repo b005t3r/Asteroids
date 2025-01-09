@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
-import com.lazarecki.asteroids.shaders.AbstractShader;
+import com.lazarecki.asteroids.shaders.Shader;
 
-public class CrtPostprocessShader extends AbstractShader {
+public class CrtPostprocessShader extends Shader {
     public enum NoiseMode { add, subtract, multiply, divide, max, min }
 
     private static Pool<Matrix4> matrixPool = new Pool<>() {

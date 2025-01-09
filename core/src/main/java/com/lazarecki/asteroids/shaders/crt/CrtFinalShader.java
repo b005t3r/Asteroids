@@ -3,9 +3,9 @@ package com.lazarecki.asteroids.shaders.crt;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
-import com.lazarecki.asteroids.shaders.AbstractShader;
+import com.lazarecki.asteroids.shaders.Shader;
 
-public class CrtFinalShader extends AbstractShader {
+public class CrtFinalShader extends Shader {
     public enum MaskMode { thin, dense, denser, thinScanline, scanline, denseScanline }
 
     public Vector2 pixelSize = new Vector2(Float.NaN, Float.NaN);
