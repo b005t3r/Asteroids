@@ -24,9 +24,9 @@ public class Envelope implements Filter {
     }
 
     @Override
-    public float filter(float value, float time) {
+    public float filter(float amplitude, float time) {
         if(time < 0)
-            return initialLevel * value;
+            return initialLevel * amplitude;
         else if(time >= periods.items[periods.size - 1])
             return levels.items[levels.size - 1];
 
@@ -52,7 +52,7 @@ public class Envelope implements Filter {
             break;
         }
 
-        return value * interpolation.apply(
+        return amplitude * interpolation.apply(
             periodStartLevel, periodEndLevel,
             (time - periodStartTime) / (periodEndTime - periodStartTime)
         );

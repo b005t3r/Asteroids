@@ -8,7 +8,7 @@ public class Volume implements Filter {
     }
 
     @Override
-    public float filter(float value, float time) {
-        return value * volume;
+    public float filter(float amplitude, float time) {
+        return amplitude * volume;
     }
 }
